@@ -41,6 +41,54 @@ enum OrgVerification {
   @@map("org_verification")
 }
 
+enum UploadPurpose {
+  event_cover
+  organizer_logo
+
+  @@map("upload_purpose")
+}
+
+enum UploadStatus {
+  pending
+  processing
+  ready
+  failed
+
+  @@map("upload_status")
+}
+
+enum EventMode {
+  in_person
+  online
+  hybrid
+
+  @@map("event_mode")
+}
+
+enum SeatingType {
+  general_admission
+  reserved
+
+  @@map("seating_type")
+}
+
+enum EventStatus {
+  draft
+  published
+  cancelled
+  completed
+
+  @@map("event_status")
+}
+
+enum EventVisibility {
+  public
+  unlisted
+  private
+
+  @@map("event_visibility")
+}
+
 enum TokenPurpose {
   email_verify
   password_reset
@@ -83,6 +131,7 @@ model User {
   notifications      Notification[]
   auditLogs          AuditLog[]
   organizerProfile   OrganizerProfile?
+  uploads            Upload[]
 
   @@map("users")
 }
@@ -192,6 +241,7 @@ model Category {
 
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
   children Category[] @relation("CategoryTree")
+  events   Event[]
 
   @@index([parentId])
   @@map("categories")
@@ -213,8 +263,125 @@ model OrganizerProfile {
   createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updatedAt          DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events Event[]
+  venues Venue[]
 
   @@index([verificationStatus, createdAt(sort: Desc)])
   @@map("organizer_profiles")
+}
+
+/// Seat maps (venue_seats) come later with reserved seating.
+model Venue {
+  id          String    @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  ownerId     String?   @map("owner_id") @db.Uuid /// NULL = platform-managed venue
+  name        String
+  addressLine String?   @map("address_line")
+  city        String
+  country     String    @default("Nepal")
+  latitude    Decimal?  @db.Decimal(9, 6)
+  longitude   Decimal?  @db.Decimal(9, 6)
+  capacity    Int?
+  hasSeatMap  Boolean   @default(false) @map("has_seat_map")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+
+  owner  OrganizerProfile? @relation(fields: [ownerId], references: [userId], onDelete: Restrict)
+  events Event[]
+
+  @@index([ownerId])
+  @@map("venues")
+}
+
+/// Image uploaded straight to object storage, then validated + resized by the media worker.
+model Upload {
+  id          String        @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  userId      String        @map("user_id") @db.Uuid
+  purpose     UploadPurpose
+  status      UploadStatus  @default(pending)
+  contentType String        @map("content_type")
+  sizeBytes   Int           @map("size_bytes")
+  objectKey   String        @map("object_key") /// tmp/{id}: raw upload, deleted after processing
+  variants    Json? /// { "lg": "https://…/lg.webp", "md": …, "sm": … } once ready
+  width       Int?
+  height      Int?
+  error       String?
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coverEvents Event[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("uploads")
+}
+
+model Event {
+  id                 String                   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  organizerId        String                   @map("organizer_id") @db.Uuid
+  venueId            String?                  @map("venue_id") @db.Uuid
+  categoryId         String?                  @map("category_id") @db.Uuid
+  title              String
+  slug               String                   @unique @db.Citext
+  summary            String?
+  description        String?
+  coverUploadId      String?                  @map("cover_upload_id") @db.Uuid
+  mode               EventMode
+  onlineUrl          String?                  @map("online_url")
+  seatingType        SeatingType              @default(general_admission) @map("seating_type")
+  startsAt           DateTime                 @map("starts_at") @db.Timestamptz
+  endsAt             DateTime                 @map("ends_at") @db.Timestamptz
+  timezone           String                   @default("Asia/Kathmandu")
+  status             EventStatus              @default(draft)
+  visibility         EventVisibility          @default(public)
+  publishedAt        DateTime?                @map("published_at") @db.Timestamptz
+  cancelledAt        DateTime?                @map("cancelled_at") @db.Timestamptz
+  cancellationReason String?                  @map("cancellation_reason")
+  metadata           Json                     @default("{}")
+  /// GENERATED ALWAYS … STORED (see migration); never written by the app
+  searchVector       Unsupported("tsvector")? @default(dbgenerated("((setweight(to_tsvector('simple'::regconfig, COALESCE(title, ''::text)), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, COALESCE(summary, ''::text)), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, COALESCE(description, ''::text)), 'C'::\"char\"))")) @map("search_vector")
+  version            Int                      @default(0)
+  createdAt          DateTime                 @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt          DateTime?                @map("deleted_at") @db.Timestamptz
+
+  organizer   OrganizerProfile @relation(fields: [organizerId], references: [userId], onDelete: Restrict)
+  venue       Venue?           @relation(fields: [venueId], references: [id], onDelete: Restrict)
+  category    Category?        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  cover       Upload?          @relation(fields: [coverUploadId], references: [id], onDelete: SetNull)
+  ticketTypes TicketType[]
+
+  @@index([organizerId, createdAt(sort: Desc)])
+  @@index([categoryId, startsAt])
+  @@index([venueId])
+  @@index([searchVector], map: "events_search_idx", type: Gin)
+  @@map("events")
+}
+
+/// Ticket tiers. Stock is reserved/sold with atomic conditional UPDATEs (bookings module).
+model TicketType {
+  id               String    @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  eventId          String    @map("event_id") @db.Uuid
+  name             String
+  description      String?
+  price            BigInt /// minor units (paisa); 0 = free
+  currency         String    @default("NPR") @db.Char(3)
+  quantityTotal    Int       @map("quantity_total")
+  quantityReserved Int       @default(0) @map("quantity_reserved")
+  quantitySold     Int       @default(0) @map("quantity_sold")
+  minPerOrder      Int       @default(1) @map("min_per_order")
+  maxPerOrder      Int       @default(10) @map("max_per_order")
+  salesStartAt     DateTime? @map("sales_start_at") @db.Timestamptz
+  salesEndAt       DateTime? @map("sales_end_at") @db.Timestamptz
+  isActive         Boolean   @default(true) @map("is_active")
+  sortOrder        Int       @default(0) @map("sort_order")
+  version          Int       @default(0)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, name])
+  @@map("ticket_types")
 }

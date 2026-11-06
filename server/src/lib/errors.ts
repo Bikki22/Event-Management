@@ -53,6 +53,21 @@ export function isForeignKeyViolation(err: unknown): boolean {
   return (cause?.originalCode ?? cause?.code) === "23503";
 }
 
+/** True when `err` is a CHECK constraint violation (optionally a specific constraint). */
+export function isCheckViolation(err: unknown, constraint?: string): boolean {
+  const cause = (err as { cause?: { originalCode?: string; code?: string } } | null)?.cause;
+  const metaCode = (
+    (err as { meta?: { code?: string } } | null)?.meta as { code?: string } | undefined
+  )?.code;
+  const code = cause?.originalCode ?? cause?.code ?? metaCode;
+  if (code !== "23514") return false;
+  return (
+    !constraint ||
+    String((err as Error).message ?? "").includes(constraint) ||
+    JSON.stringify((err as { cause?: unknown }).cause ?? {}).includes(constraint)
+  );
+}
+
 /** Prisma / Postgres errors → API errors. DB constraints are our safety net. */
 export function mapDbError(err: unknown): AppError | null {
   if (err instanceof Prisma.PrismaClientKnownRequestError) {

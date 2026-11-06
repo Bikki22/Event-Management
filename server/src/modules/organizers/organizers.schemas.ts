@@ -23,8 +23,12 @@ export const createProfileBody = z
     bio: bio.optional(),
     website: website.optional(),
     logoUrl: logoUrl.optional(),
+    logoUploadId: z.uuid().optional(), // an organizer_logo upload (see upload.md)
   })
-  .strict();
+  .strict()
+  .refine((v) => !(v.logoUrl && v.logoUploadId), {
+    error: "Send logoUrl or logoUploadId, not both",
+  });
 
 // verificationStatus, reviewNote, userId... are not editable here
 export const updateProfileBody = z
@@ -34,8 +38,12 @@ export const updateProfileBody = z
     bio: bio.nullable().optional(),
     website: website.nullable().optional(),
     logoUrl: logoUrl.nullable().optional(),
+    logoUploadId: z.uuid().optional(),
   })
   .strict()
+  .refine((v) => !(v.logoUrl && v.logoUploadId), {
+    error: "Send logoUrl or logoUploadId, not both",
+  })
   .refine((v) => Object.keys(v).length > 0, { error: "Provide at least one field to update" });
 
 const accountName = z.string().trim().min(2).max(100);

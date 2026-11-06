@@ -72,7 +72,7 @@ export const organizersRouter = Router();
 
 organizersRouter.get("/:slug", validate({ params: organizerSlugParams }), async (req, res) => {
   res.setHeader("Cache-Control", "public, max-age=60");
-  res.json({ organizer: await organizers.getPublic((req.params as { slug: string }).slug) });
+  res.json(await organizers.getPublic((req.params as { slug: string }).slug));
 });
 
 /** Mounted at /api/v1/admin/organizers. The admin router enforces authenticate + requireRole("admin"). */

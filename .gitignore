@@ -1,0 +1,7 @@
+# Local design notes / API docs kept out of the repo.
+# (Entries in server/.gitignore only apply inside server/, so docs at the root are listed here.)
+auth.md
+backend.md
+organizers.md
+events.md
+upload.md

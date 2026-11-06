@@ -64,6 +64,21 @@ const schema = z
     // retired keys still needed to decrypt old rows: "id:hex,id:hex"
     DATA_ENCRYPTION_OLD_KEYS: z.string().default(""),
 
+    // ---- Object storage (S3 API: RustFS locally, AWS S3 / Cloudflare R2 in prod) ----
+    S3_ENDPOINT: z.url().optional(), // omit for AWS S3
+    S3_REGION: z.string().default("us-east-1"),
+    S3_BUCKET: z.string().min(3),
+    S3_ACCESS_KEY_ID: z.string().min(1),
+    S3_SECRET_ACCESS_KEY: z.string().min(1),
+    S3_FORCE_PATH_STYLE: z.stringbool().default(true), // needed for RustFS/MinIO
+    // public base URL for processed images (CDN in prod), e.g. http://localhost:9000/ems-media
+    S3_PUBLIC_URL: z.url().optional(),
+    UPLOAD_MAX_BYTES: z.coerce
+      .number()
+      .int()
+      .positive()
+      .default(5 * 1024 * 1024),
+
     // ---- Email ----
     EMAIL_DRIVER: z.enum(["resend", "smtp", "console"]).default("smtp"),
     EMAIL_FROM: z.string().min(3).default("EMS <no-reply@ems.local>"),
