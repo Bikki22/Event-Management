@@ -1,0 +1,51 @@
+# Local infrastructure. Run the API on your host with `npm run dev`
+# (or later add api/worker services here once the Prisma setup lands).
+name: ems
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ems
+      POSTGRES_PASSWORD: ems
+      POSTGRES_DB: ems
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ems -d ems"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    ports: ["6379:6379"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio12345
+    ports: ["9000:9000", "9001:9001"]
+    volumes:
+      - miniodata:/data
+
+  mailpit:
+    image: axllent/mailpit:latest # catches all outgoing email; UI at http://localhost:8025
+    ports: ["8025:8025", "1025:1025"]
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
