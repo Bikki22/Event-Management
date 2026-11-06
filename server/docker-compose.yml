@@ -31,15 +31,17 @@ services:
       timeout: 3s
       retries: 10
 
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+  # S3-compatible object storage (uploads). MinIO no longer publishes images on Docker Hub,
+  # so RustFS is used locally; the app only speaks the S3 API, so AWS S3 / R2 work the same.
+  storage:
+    image: rustfs/rustfs:1.0.4
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio12345
-    ports: ["9000:9000", "9001:9001"]
+      RUSTFS_ACCESS_KEY: ems
+      RUSTFS_SECRET_KEY: ems-storage-secret
+      RUSTFS_CONSOLE_ENABLE: "true"
+    ports: ["9000:9000", "9001:9001"] # 9000 = S3 API, 9001 = web console
     volumes:
-      - miniodata:/data
+      - storagedata:/data
 
   mailpit:
     image: axllent/mailpit:latest # catches all outgoing email; UI at http://localhost:8025
@@ -48,4 +50,4 @@ services:
 volumes:
   pgdata:
   redisdata:
-  miniodata:
+  storagedata:

@@ -8,7 +8,7 @@ Any user with a **verified email** can become an organizer. Their profile starts
 | ------ | ----------------------------------------- | ----------------- | ------------------------------------------------------- |
 | POST   | `/me/organizer-profile`                   | 👤 verified email | Become an organizer. `403 EMAIL_NOT_VERIFIED` otherwise |
 | GET    | `/me/organizer-profile`                   | 👤                | Own profile incl. review status, note and masked payout |
-| PATCH  | `/me/organizer-profile`                   | 👤                | `orgName`, `slug`, `bio`, `website`, `logoUrl`          |
+| PATCH  | `/me/organizer-profile`                   | 👤                | `orgName`, `slug`, `bio`, `website`, `logoUrl` or `logoUploadId` |
 | PUT    | `/me/organizer-profile/payout`            | 👤                | Set/replace payout details (encrypted)                  |
 | DELETE | `/me/organizer-profile/payout`            | 👤                | Remove payout details                                   |
 | GET    | `/organizers/{slug}`                      | 🔓                | Public page (no payout, no review note)                 |
@@ -32,7 +32,9 @@ Any user with a **verified email** can become an organizer. Their profile starts
 - Organizer **renames** a **verified** organization → back to `pending` (a verified badge can't be carried over to a different name). Editing bio, website, logo or slug keeps it verified.
 - Every change is in `audit_logs` (`organizer.profile_created/updated`, `organizer.payout_updated/removed`, `admin.organizer_verified/rejected`).
 
-**Public page** hides rejected organizers and organizers whose account is suspended or deleted (`404`). Pending organizers are visible with `verified: false`. Upcoming events will be added here when the events module exists.
+**Public page** hides rejected organizers and organizers whose account is suspended or deleted (`404`). Pending organizers are visible with `verified: false`. The response also has `upcomingEvents` (up to 12 published public events, soonest first).
+
+**Logo:** either an external https `logoUrl`, or `logoUploadId` from an `organizer_logo` upload (see `upload.md`); the processed 512×512 WebP URL is stored as `logoUrl`.
 
 **Payout details**
 
@@ -192,4 +194,4 @@ src/modules/notifications/templates/index.ts           # + organizer.verified / 
 test/organizers.test.ts                                # 14 tests
 ```
 
-**Open decision for the events module:** can a `pending` organizer create draft events, or only `verified` ones? Suggested: drafts allowed, **publishing** requires `verified`.
+**Events rule (decided):** pending organizers can create and edit **drafts**; **publishing** requires a `verified` profile (`403 ORGANIZER_NOT_VERIFIED`). See `events.md`.

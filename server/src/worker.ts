@@ -7,6 +7,9 @@ import { bullConnection, disconnectRedis } from "./lib/redis.js";
 import { purgeExpiredAuthData } from "./modules/auth/auth.jobs.js";
 import { processEmail, type EmailJobData } from "./modules/notifications/notifications.jobs.js";
 import { relayOutbox } from "./modules/notifications/notifications.service.js";
+import { completeEndedEvents } from "./modules/events/events.service.js";
+import { processMedia } from "./modules/uploads/uploads.jobs.js";
+import { purgeStaleUploads, type MediaJobData } from "./modules/uploads/uploads.service.js";
 
 /**
  * Worker process: consumes queues and (for now) also registers the repeatable maintenance jobs.
@@ -38,10 +41,19 @@ const emailWorker = new Worker<EmailJobData>("email", traced("email", processEma
 });
 onFailed(emailWorker, "email");
 
+// ---- media (image validation + resizing; CPU-bound, so low concurrency) ----
+const mediaWorker = new Worker<MediaJobData>("media", traced("media", processMedia), {
+  connection: bullConnection,
+  concurrency: 2,
+});
+onFailed(mediaWorker, "media");
+
 // ---- maintenance (repeatable) ----
 const maintenanceHandlers: Record<string, () => Promise<unknown>> = {
   "outbox-relay": () => relayOutbox(),
   "purge-auth": () => purgeExpiredAuthData(),
+  "purge-uploads": () => purgeStaleUploads(),
+  "complete-events": () => completeEndedEvents(),
 };
 
 const maintenanceWorker = new Worker(
@@ -60,10 +72,20 @@ async function registerSchedules() {
   const opts = { attempts: 3, removeOnComplete: { count: 100 }, removeOnFail: { count: 500 } };
   await q.upsertJobScheduler("outbox-relay", { every: 10_000 }, { name: "outbox-relay", opts });
   await q.upsertJobScheduler("purge-auth", { pattern: "0 3 * * *" }, { name: "purge-auth", opts });
+  await q.upsertJobScheduler(
+    "purge-uploads",
+    { pattern: "30 3 * * *" },
+    { name: "purge-uploads", opts },
+  );
+  await q.upsertJobScheduler(
+    "complete-events",
+    { every: 15 * 60_000 },
+    { name: "complete-events", opts },
+  );
 }
 
 registerSchedules()
-  .then(() => logger.info({ queues: ["email", "maintenance"] }, "worker started"))
+  .then(() => logger.info({ queues: ["email", "media", "maintenance"] }, "worker started"))
   .catch((err: unknown) => {
     logger.fatal({ err }, "failed to register job schedules");
     process.exit(1);
@@ -80,7 +102,7 @@ async function shutdown(signal: string) {
     process.exit(1);
   }, 25_000).unref();
   // let in-flight jobs finish; stalled-job detection re-queues anything interrupted
-  await Promise.all([emailWorker.close(), maintenanceWorker.close()]);
+  await Promise.all([emailWorker.close(), mediaWorker.close(), maintenanceWorker.close()]);
   await closeQueues();
   await disconnectPrisma();
   await disconnectRedis();

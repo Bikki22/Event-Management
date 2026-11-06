@@ -7,6 +7,9 @@ import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { requestContext } from "./middleware/request-context.js";
 import { applySecurity } from "./middleware/security.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import { eventsRouter, myEventsRouter } from "./modules/events/events.routes.js";
+import { uploadsRouter } from "./modules/uploads/uploads.routes.js";
+import { venuesRouter } from "./modules/venues/venues.routes.js";
 import { categoriesRouter } from "./modules/categories/categories.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { meRouter } from "./modules/users/users.routes.js";
@@ -45,8 +48,12 @@ export function buildApp(): Express {
   });
   api.use("/auth", authRouter);
   api.use("/me/organizer-profile", myOrganizerRouter); // before /me
+  api.use("/me/events", myEventsRouter); // before /me
   api.use("/me", meRouter);
   api.use("/organizers", organizersRouter);
+  api.use("/venues", venuesRouter);
+  api.use("/events", eventsRouter);
+  api.use("/uploads", uploadsRouter);
   api.use("/categories", categoriesRouter);
   api.use("/admin", adminRouter);
   app.use("/api/v1", api);

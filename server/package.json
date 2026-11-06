@@ -23,11 +23,14 @@
     "keys:generate": "tsx scripts/generate-keys.ts",
     "user:make-admin": "tsx --env-file=.env scripts/make-admin.ts",
     "db:seed": "tsx --env-file=.env scripts/seed-categories.ts",
+    "storage:init": "tsx --env-file=.env scripts/storage-init.ts",
     "postinstall": "prisma generate",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1163.0",
+    "@aws-sdk/s3-presigned-post": "^3.1163.0",
     "@node-rs/argon2": "^2.2.2",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
@@ -45,6 +48,7 @@
     "pino-http": "^11.0.0",
     "rate-limit-redis": "^6.0.2",
     "resend": "^6.37.0",
+    "sharp": "^0.35.5",
     "zod": "^4.6.7"
   },
   "devDependencies": {

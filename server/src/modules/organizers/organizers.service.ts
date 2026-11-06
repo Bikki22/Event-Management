@@ -8,6 +8,14 @@ import { decodeCursor, toPage, type Page } from "../../lib/pagination.js";
 import { prisma } from "../../lib/prisma.js";
 import { SLUG_MAX, slugify } from "../../lib/slug.js";
 import { invalidateUserState } from "../auth/session-state.js";
+import {
+  fullEventInclude,
+  toEventCard,
+  type EventCardDto,
+  type FullEvent,
+} from "../events/events.dto.js";
+import { variantsOf } from "../uploads/uploads.dto.js";
+import { requireReadyUpload } from "../uploads/uploads.service.js";
 import { dispatch, queueEmail } from "../notifications/notifications.service.js";
 import {
   payoutAad,
@@ -34,6 +42,12 @@ const profileNotFound = () =>
   new AppError(404, "ORGANIZER_PROFILE_NOT_FOUND", "You don't have an organizer profile yet");
 const slugTaken = () => Conflict("SLUG_TAKEN", "Another organizer already uses this URL");
 
+/** logoUploadId → the processed 512px logo URL. */
+async function logoFromUpload(userId: string, uploadId: string | undefined) {
+  if (!uploadId) return undefined;
+  return variantsOf(await requireReadyUpload(userId, uploadId, "organizer_logo"))!.lg;
+}
+
 // ───────────── become an organizer ─────────────
 
 const suffix = () => randomBytes(3).toString("hex"); // 6 chars
@@ -59,6 +73,7 @@ export async function becomeOrganizer(
   ip: string | null,
 ): Promise<OrganizerProfileDto> {
   const candidates = slugCandidates(input);
+  const uploadedLogo = await logoFromUpload(userId, input.logoUploadId);
 
   for (const [i, slug] of candidates.entries()) {
     try {
@@ -73,7 +88,7 @@ export async function becomeOrganizer(
             slug,
             bio: input.bio ?? null,
             website: input.website ?? null,
-            logoUrl: input.logoUrl ?? null,
+            logoUrl: uploadedLogo ?? input.logoUrl ?? null,
             createdAt: new Date(), // ms precision, see list cursor
           },
           tx,
@@ -131,6 +146,7 @@ export async function updateMine(
   input: UpdateProfileBody,
   ip: string | null,
 ): Promise<OrganizerProfileDto> {
+  const uploadedLogo = await logoFromUpload(userId, input.logoUploadId);
   try {
     const profile = await prisma.$transaction(async (tx) => {
       const before = await repo.findByUserId(userId, tx);
@@ -149,6 +165,7 @@ export async function updateMine(
           ...(input.bio !== undefined ? { bio: input.bio } : {}),
           ...(input.website !== undefined ? { website: input.website } : {}),
           ...(input.logoUrl !== undefined ? { logoUrl: input.logoUrl } : {}),
+          ...(uploadedLogo ? { logoUrl: uploadedLogo } : {}),
           ...(backToReview
             ? { verificationStatus: "pending", reviewNote: null, reviewedAt: null }
             : {}),
@@ -231,12 +248,26 @@ export async function removePayout(userId: string, ip: string | null): Promise<v
 // ───────────── public ─────────────
 
 /** Rejected organizers and suspended/deleted owners are hidden (404, not 403). */
-export async function getPublic(slug: string): Promise<PublicOrganizerDto> {
+export async function getPublic(
+  slug: string,
+): Promise<{ organizer: PublicOrganizerDto; upcomingEvents: EventCardDto[] }> {
   const profile = await repo.findBySlugWithOwnerStatus(slug);
   if (!profile || profile.verificationStatus === "rejected" || profile.user.status !== "active") {
     throw NotFound("Organizer");
   }
-  return toPublicDto(profile);
+  const events = (await prisma.event.findMany({
+    where: {
+      organizerId: profile.userId,
+      status: "published",
+      visibility: "public",
+      deletedAt: null,
+      endsAt: { gt: new Date() },
+    },
+    include: fullEventInclude,
+    orderBy: [{ startsAt: "asc" }, { id: "asc" }],
+    take: 12,
+  })) as FullEvent[];
+  return { organizer: toPublicDto(profile), upcomingEvents: events.map(toEventCard) };
 }
 
 // ───────────── admin ─────────────
@@ -337,4 +368,15 @@ export async function adminReview(
   await dispatch([notificationId]);
   log.info({ actorId, userId, status: input.status }, "organizer.reviewed");
   return toAdminDto(profile);
+}
+
+// ───────────── used by other modules ─────────────
+
+/** Loads the caller's organizer profile, or 403 if they never became an organizer. */
+export async function requireOrganizerProfile(userId: string) {
+  const profile = await repo.findByUserId(userId);
+  if (!profile) {
+    throw new AppError(403, "NOT_AN_ORGANIZER", "Create an organizer profile first");
+  }
+  return profile;
 }

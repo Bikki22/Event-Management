@@ -8,7 +8,7 @@ export const api = () => request(app);
 
 /** Wipes all auth data and Redis (rate limits, revoked sessions, queues) between tests. */
 export async function resetState(): Promise<void> {
-  await prisma.$executeRaw`TRUNCATE categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE ticket_types, events, venues, uploads, categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
   await redis.flushdb();
 }
 
@@ -52,3 +52,37 @@ export async function latestEmailToken(type: string): Promise<string> {
 
 export const me = (accessToken: string) =>
   api().get("/api/v1/me").set("Authorization", `Bearer ${accessToken}`);
+
+export const bearer = (token: string) => ({ Authorization: `Bearer ${token}` });
+
+/**
+ * Registered user with a verified email and an organizer profile.
+ * `verified: true` also marks the organizer profile as verified (so it can publish).
+ */
+export async function makeOrganizer(
+  email = "org@example.com",
+  opts: { verified?: boolean; orgName?: string } = {},
+) {
+  const { res, accessToken } = await register(email);
+  const id = res.body.user.id as string;
+  await prisma.user.update({ where: { id }, data: { emailVerifiedAt: new Date() } });
+  await redis.del(`user:state:${id}`);
+  const created = await api()
+    .post("/api/v1/me/organizer-profile")
+    .set(bearer(accessToken))
+    .send({ orgName: opts.orgName ?? `Org ${email.split("@")[0]}` });
+  if (created.status !== 201) throw new Error(`organizer setup failed: ${created.text}`);
+  if (opts.verified ?? true) {
+    await prisma.organizerProfile.update({
+      where: { userId: id },
+      data: { verificationStatus: "verified" },
+    });
+  }
+  return { id, token: accessToken, slug: created.body.profile.slug as string };
+}
+
+export async function makeAdmin(email = "admin@example.com") {
+  await register(email);
+  await prisma.user.update({ where: { email }, data: { role: "admin" } });
+  return (await login(email)).accessToken;
+}
