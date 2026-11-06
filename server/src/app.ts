@@ -9,8 +9,20 @@ import { applySecurity } from "./middleware/security.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { bookingsRouter, myBookingsRouter } from "./modules/bookings/bookings.routes.js";
 import { eventsRouter, myEventsRouter } from "./modules/events/events.routes.js";
+import { metricsMiddleware, metricsRouter } from "./middleware/metrics.js";
 import {
+  bookingPaymentsRouter,
+  paymentsRouter,
+  webhooksRouter,
+} from "./modules/payments/payments.routes.js";
+import {
+  eventPromoCodesRouter,
+  promoCodesRouter,
+} from "./modules/promo-codes/promo-codes.routes.js";
+import {
+  attendeesRouter,
   checkInsRouter,
+  exportsRouter,
   myStaffEventsRouter,
   myTicketsRouter,
   staffRouter,
@@ -32,6 +44,7 @@ export function buildApp(): Express {
   app.disable("x-powered-by");
 
   app.use(requestContext);
+  app.use(metricsMiddleware);
   app.use(
     pinoHttp({
       logger,
@@ -43,11 +56,14 @@ export function buildApp(): Express {
   );
 
   applySecurity(app);
+  // webhooks verify signatures over the raw bytes: mount before express.json() parses them
+  app.use("/api/v1/webhooks", webhooksRouter);
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 
   // Infra routes (unversioned)
   app.use("/health", healthRouter);
+  app.use("/metrics", metricsRouter);
 
   // Versioned API. Module routers are mounted here as they are built.
   const api = Router();
@@ -65,8 +81,14 @@ export function buildApp(): Express {
   api.use("/venues", venuesRouter);
   api.use("/events/:id/check-ins", checkInsRouter); // before /events
   api.use("/events/:id/staff", staffRouter); // before /events
+  api.use("/events/:id/attendees", attendeesRouter); // before /events
+  api.use("/events/:id/promo-codes", eventPromoCodesRouter); // before /events
   api.use("/events", eventsRouter);
+  api.use("/bookings", bookingPaymentsRouter); // /:id/payments, /:id/refunds
   api.use("/bookings", bookingsRouter);
+  api.use("/payments", paymentsRouter);
+  api.use("/promo-codes", promoCodesRouter);
+  api.use("/exports", exportsRouter);
   api.use("/tickets", ticketsRouter);
   api.use("/uploads", uploadsRouter);
   api.use("/categories", categoriesRouter);

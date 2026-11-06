@@ -9,11 +9,18 @@ import {
   Unprocessable,
 } from "../../lib/errors.js";
 import { logger } from "../../lib/logger.js";
+import {
+  bookingsConfirmed,
+  bookingsCreated,
+  bookingsExpired,
+  ticketsSoldOut,
+} from "../../lib/metrics.js";
 import { decodeCursor, toPage } from "../../lib/pagination.js";
 import { prisma, type DbOrTx } from "../../lib/prisma.js";
 import { getQueue } from "../../lib/queue.js";
 import type { AuthContext } from "../../middleware/auth.js";
 import { dispatch, queueEmail } from "../notifications/notifications.service.js";
+import { discountFor, findUsable, redeemInTx } from "../promo-codes/promo-codes.service.js";
 import { enqueueTicketPdfs, issueTickets } from "../tickets/tickets.service.js";
 import {
   fullBookingInclude,
@@ -98,6 +105,8 @@ export async function create(
   const event = await validateRequest(input);
   const user = await prisma.user.findUniqueOrThrow({ where: { id: auth.userId } });
   const items = [...input.items].sort((a, b) => a.ticketTypeId.localeCompare(b.ticketTypeId));
+  // explains a bad code before any stock is touched; the redemption itself is claimed in the tx
+  const promo = input.promoCode ? await findUsable(event.id, input.promoCode) : null;
 
   let result: { bookingId: string; confirmed: Confirmation | null } | undefined;
   for (let attempt = 0; attempt < 2 && !result; attempt++) {
@@ -125,6 +134,7 @@ export async function create(
             const available = t
               ? Math.max(0, t.quantityTotal - t.quantityReserved - t.quantitySold)
               : 0;
+            ticketsSoldOut.inc();
             throw Conflict(
               "TICKET_SOLD_OUT",
               available === 0
@@ -141,6 +151,14 @@ export async function create(
           throw Unprocessable("MIXED_CURRENCY", "All tickets in one booking must share a currency");
         }
         const subtotal = priced.reduce((sum, p) => sum + p.unitPrice * BigInt(p.quantity), 0n);
+        let discount = 0n;
+        if (promo) {
+          if (!(await redeemInTx(tx, promo.id))) {
+            throw Conflict("PROMO_CODE_EXHAUSTED", "This code has just been used up");
+          }
+          discount = discountFor(promo, subtotal);
+        }
+        const total = subtotal - discount;
 
         const booking = await tx.booking.create({
           data: {
@@ -148,7 +166,9 @@ export async function create(
             userId: auth.userId,
             eventId: event.id,
             subtotal,
-            totalAmount: subtotal, // promo codes and fees come later
+            discountAmount: discount,
+            totalAmount: total, // platform fees: none yet
+            promoCodeId: promo?.id ?? null,
             currency,
             expiresAt: new Date(Date.now() + HOLD_MS),
             idempotencyKey,
@@ -165,7 +185,8 @@ export async function create(
           },
         });
 
-        const confirmed = subtotal === 0n ? await confirmInTx(tx, booking.id) : null;
+        // nothing to pay (free tickets or a 100% code): confirm right away
+        const confirmed = total === 0n ? await confirmInTx(tx, booking.id) : null;
         return { bookingId: booking.id, confirmed };
       }, TX_OPTS);
     } catch (err) {
@@ -199,6 +220,7 @@ export async function create(
         log.warn({ err, bookingId }, "expiry job not queued; sweep will expire it"),
       );
   }
+  bookingsCreated.inc({ free: String(!!confirmed) });
   log.info({ bookingId, eventId: event.id, free: !!confirmed }, "booking.created");
   return { booking: toBookingDto((await loadFull(bookingId))!), created: true };
 }
@@ -260,6 +282,7 @@ export async function confirmInTx(tx: DbOrTx, bookingId: string): Promise<Confir
 
 /** Side effects after commit: email + ticket PDFs (both have safety-net sweeps). */
 export async function afterConfirm(c: Confirmation): Promise<void> {
+  bookingsConfirmed.inc();
   await dispatch([c.notificationId]);
   await enqueueTicketPdfs(c.tickets);
   log.info({ bookingId: c.bookingId, tickets: c.tickets.length }, "booking.confirmed");
@@ -324,8 +347,63 @@ async function release(
         SET quantity_reserved = quantity_reserved - ${item.quantity}, updated_at = now()
         WHERE id = ${item.ticketTypeId}::uuid`;
     }
+    // give the promo code redemption back too
+    const b = await tx.booking.findUniqueOrThrow({ where: { id: bookingId } });
+    if (b.promoCodeId) {
+      await tx.$executeRaw`
+        UPDATE promo_codes SET times_redeemed = times_redeemed - 1, updated_at = now()
+        WHERE id = ${b.promoCodeId}::uuid AND times_redeemed > 0`;
+    }
     return true;
   }, TX_OPTS);
+}
+
+/** System cancel of an unpaid booking (event cancelled). Returns false if it wasn't pending. */
+export const cancelPendingBySystem = (bookingId: string) => release(bookingId, "cancelled");
+
+/**
+ * A payment succeeded after its booking had expired or been cancelled. Try to hold the same
+ * tickets again (in id order, all-or-nothing). Returns true if the booking is pending again,
+ * ready for confirmInTx; false if the stock is gone (→ the caller refunds).
+ */
+export async function reholdInTx(tx: DbOrTx, bookingId: string): Promise<boolean> {
+  const b = await tx.booking.findUniqueOrThrow({ where: { id: bookingId } });
+  if (b.status !== "expired" && b.status !== "cancelled") return false;
+  const event = await tx.event.findUniqueOrThrow({ where: { id: b.eventId } });
+  if (event.status !== "published" || event.endsAt <= new Date()) return false;
+
+  const items = await tx.bookingItem.findMany({
+    where: { bookingId },
+    orderBy: { ticketTypeId: "asc" },
+  });
+  const held: typeof items = [];
+  for (const item of items) {
+    const n = await tx.$executeRaw`
+      UPDATE ticket_types
+      SET quantity_reserved = quantity_reserved + ${item.quantity}, updated_at = now()
+      WHERE id = ${item.ticketTypeId}::uuid
+        AND quantity_reserved + quantity_sold + ${item.quantity} <= quantity_total`;
+    if (n === 0) {
+      for (const h of held) {
+        await tx.$executeRaw`
+          UPDATE ticket_types SET quantity_reserved = quantity_reserved - ${h.quantity}
+          WHERE id = ${h.ticketTypeId}::uuid`;
+      }
+      return false;
+    }
+    held.push(item);
+  }
+  if (b.promoCodeId) {
+    // they paid the discounted price: honour it even if the code ran out meanwhile
+    await tx.$executeRaw`UPDATE promo_codes SET times_redeemed = times_redeemed + 1 WHERE id = ${b.promoCodeId}::uuid
+      AND (max_redemptions IS NULL OR times_redeemed < max_redemptions)`;
+  }
+  await tx.booking.update({
+    where: { id: bookingId },
+    data: { status: "pending", cancelledAt: null, expiresAt: new Date(Date.now() + 5 * 60_000) },
+  });
+  log.warn({ bookingId }, "booking.reheld_after_late_payment");
+  return true;
 }
 
 /** The buyer cancels an unpaid booking. Confirmed bookings need a refund (payments module). */
@@ -348,7 +426,10 @@ export async function cancel(auth: AuthContext, id: string): Promise<BookingDto>
 /** Delayed job + sweep: only expires bookings whose deadline has passed. */
 export async function expire(bookingId: string): Promise<boolean> {
   const done = await release(bookingId, "expired", { expiresAt: { lte: new Date() } });
-  if (done) log.info({ bookingId }, "booking.expired");
+  if (done) {
+    bookingsExpired.inc();
+    log.info({ bookingId }, "booking.expired");
+  }
   return done;
 }
 

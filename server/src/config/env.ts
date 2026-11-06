@@ -87,8 +87,43 @@ const schema = z
 
     // ---- Business rules ----
     BOOKING_HOLD_MINUTES: z.coerce.number().int().positive().default(10),
+    // buyers can refund themselves until this many hours before the event starts
+    REFUND_CUTOFF_HOURS: z.coerce.number().int().min(0).default(48),
+
+    // ---- Payments ----
+    // where gateways send the buyer back (frontend page that calls POST /payments/{provider}/verify)
+    PAYMENT_RETURN_URL: z.url().optional(),
+    KHALTI_SECRET_KEY: z.string().min(1).optional(), // enables Khalti
+    KHALTI_BASE_URL: z.url().default("https://dev.khalti.com/api/v2"), // prod: https://khalti.com/api/v2
+    ESEWA_PRODUCT_CODE: z.string().min(1).optional(), // enables eSewa (UAT: EPAYTEST)
+    ESEWA_SECRET_KEY: z.string().min(1).optional(),
+    ESEWA_FORM_URL: z.url().default("https://rc-epay.esewa.com.np/api/epay/main/v2/form"),
+    ESEWA_STATUS_URL: z.url().default("https://rc.esewa.com.np/api/epay/transaction/status/"),
+    STRIPE_SECRET_KEY: z.string().startsWith("sk_").optional(), // enables Stripe
+    STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
+    STRIPE_API_BASE: z.url().default("https://api.stripe.com"),
+    // fake gateway for local development and tests; never allowed in production
+    PAYMENT_MOCK_ENABLED: z.stringbool().default(false),
+
+    // ---- Metrics ----
+    // bearer token for GET /metrics; without it only loopback/private-network callers are allowed
+    METRICS_TOKEN: z.string().min(16).optional(),
   })
   .superRefine((v, ctx) => {
+    if (v.NODE_ENV === "production" && v.PAYMENT_MOCK_ENABLED) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["PAYMENT_MOCK_ENABLED"],
+        message: "the mock payment provider can't be enabled in production",
+      });
+    }
+    if (!!v.ESEWA_PRODUCT_CODE !== !!v.ESEWA_SECRET_KEY) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["ESEWA_SECRET_KEY"],
+        message: "set ESEWA_PRODUCT_CODE and ESEWA_SECRET_KEY together",
+      });
+    }
     if (v.EMAIL_DRIVER === "resend" && !v.RESEND_API_KEY) {
       ctx.addIssue({
         code: "custom",
@@ -108,7 +143,9 @@ const schema = z
 export type Env = z.infer<typeof schema>;
 
 function loadEnv(): Env {
-  const parsed = schema.safeParse(process.env);
+  // "KEY=" (blank) in a .env file means "not set"
+  const vars = Object.fromEntries(Object.entries(process.env).filter(([, v]) => v !== ""));
+  const parsed = schema.safeParse(vars);
   if (!parsed.success) {
     // Logger depends on env, so print directly and exit (fatal: invalid config).
     console.error("Invalid environment configuration:\n" + z.prettifyError(parsed.error));

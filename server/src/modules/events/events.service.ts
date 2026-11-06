@@ -16,6 +16,7 @@ import { prisma, type DbOrTx } from "../../lib/prisma.js";
 import { slugify } from "../../lib/slug.js";
 import type { AuthContext } from "../../middleware/auth.js";
 import { requireOrganizerProfile } from "../organizers/organizers.service.js";
+import { enqueueFanout } from "../payments/refunds.service.js";
 import { requireReadyUpload } from "../uploads/uploads.service.js";
 import { requireUsableVenue } from "../venues/venues.service.js";
 import {
@@ -170,9 +171,23 @@ export async function getForViewer(idOrSlug: string, auth?: AuthContext): Promis
     : { slug: idOrSlug.toLowerCase() };
   const e = await repo.findFull(where);
   if (!e || !canView(e, auth)) throw notFound();
-  return isManager(e, auth)
-    ? { manage: true, event: toManageEvent(e) }
-    : { manage: false, event: toPublicEvent(e) };
+  if (!isManager(e, auth)) return { manage: false, event: toPublicEvent(e) };
+  const event = toManageEvent(e);
+  if (e.status === "cancelled") {
+    // progress of the cancellation fan-out: open bookings left vs refunded/cancelled
+    const grouped = await prisma.booking.groupBy({
+      by: ["status"],
+      where: { eventId: e.id },
+      _count: { _all: true },
+    });
+    const n = (s: string) => grouped.find((g) => g.status === s)?._count._all ?? 0;
+    event.refundProgress = {
+      remaining: n("confirmed") + n("pending"),
+      refunded: n("refunded"),
+      cancelled: n("cancelled"),
+    };
+  }
+  return { manage: true, event };
 }
 
 /** Live stock per ticket type (short cache). */
@@ -446,6 +461,8 @@ export async function cancel(
       tx,
     );
   }, TX_OPTS);
+  // refunds / releases / emails for every booking happen in the worker (backend.md §6.5)
+  await enqueueFanout(id);
   log.info({ eventId: id, by: auth.userId }, "event.cancelled");
   return toManageEvent(await loadFull(id));
 }

@@ -317,7 +317,7 @@ describe("cancel / delete / complete", () => {
 
     expect((await cancel(other.token)).status).toBe(404);
     const res = await cancel(admin);
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(202); // refunds continue in the background
     expect(res.body.event).toMatchObject({
       status: "cancelled",
       cancellationReason: "Venue flooded",

@@ -14,6 +14,19 @@ import {
   type BookingExpiryJobData,
 } from "./modules/bookings/bookings.service.js";
 import { generateTicketPdf, sweepMissingPdfs } from "./modules/tickets/tickets.jobs.js";
+import { processExport, type ExportJobData } from "./modules/tickets/attendees.service.js";
+import {
+  processWebhookEvent,
+  reconcileOpenPayments,
+  reconcilePayment,
+  type PaymentJobData,
+} from "./modules/payments/payments.service.js";
+import {
+  fanoutEventCancellation,
+  processRefund,
+  type FanoutJobData,
+  type RefundJobData,
+} from "./modules/payments/refunds.service.js";
 import type { TicketPdfJobData } from "./modules/tickets/tickets.service.js";
 import { processMedia } from "./modules/uploads/uploads.jobs.js";
 import { purgeStaleUploads, type MediaJobData } from "./modules/uploads/uploads.service.js";
@@ -74,6 +87,42 @@ const ticketsWorker = new Worker<TicketPdfJobData>(
 );
 onFailed(ticketsWorker, "tickets");
 
+// ---- payments: webhook processing + targeted reconciliation ----
+const paymentsWorker = new Worker<PaymentJobData>(
+  "payments",
+  traced("payments", async (job) =>
+    job.data.kind === "webhook" ? processWebhookEvent(job.data.id) : reconcilePayment(job.data.id),
+  ),
+  { connection: bullConnection, concurrency: 5 },
+);
+onFailed(paymentsWorker, "payments");
+
+// ---- refunds: gateway refund calls (rate-limited) ----
+const refundsWorker = new Worker<RefundJobData>(
+  "refunds",
+  traced("refunds", (job) =>
+    processRefund(job.data.refundId, job.attemptsMade + 1 >= (job.opts.attempts ?? 1)),
+  ),
+  { connection: bullConnection, concurrency: 3, limiter: { max: 5, duration: 1_000 } },
+);
+onFailed(refundsWorker, "refunds");
+
+// ---- fanout: event cancelled → refund/release every booking ----
+const fanoutWorker = new Worker<FanoutJobData>(
+  "fanout",
+  traced("fanout", (job) => fanoutEventCancellation(job.data.eventId)),
+  { connection: bullConnection, concurrency: 1 },
+);
+onFailed(fanoutWorker, "fanout");
+
+// ---- exports: attendee CSVs ----
+const exportsWorker = new Worker<ExportJobData>(
+  "exports",
+  traced("exports", (job) => processExport(job.data.exportId)),
+  { connection: bullConnection, concurrency: 2 },
+);
+onFailed(exportsWorker, "exports");
+
 // ---- maintenance (repeatable) ----
 const maintenanceHandlers: Record<string, () => Promise<unknown>> = {
   "outbox-relay": () => relayOutbox(),
@@ -82,6 +131,7 @@ const maintenanceHandlers: Record<string, () => Promise<unknown>> = {
   "complete-events": () => completeEndedEvents(),
   "expire-bookings": () => sweepExpiredBookings(),
   "ticket-pdfs": () => sweepMissingPdfs(),
+  "reconcile-payments": () => reconcileOpenPayments(),
 };
 
 const maintenanceWorker = new Worker(
@@ -110,12 +160,35 @@ async function registerSchedules() {
     { every: 15 * 60_000 },
     { name: "complete-events", opts },
   );
+  await q.upsertJobScheduler(
+    "expire-bookings",
+    { every: 60_000 },
+    { name: "expire-bookings", opts },
+  );
+  await q.upsertJobScheduler("ticket-pdfs", { every: 5 * 60_000 }, { name: "ticket-pdfs", opts });
+  await q.upsertJobScheduler(
+    "reconcile-payments",
+    { every: 5 * 60_000 },
+    { name: "reconcile-payments", opts },
+  );
 }
 
 registerSchedules()
   .then(() =>
     logger.info(
-      { queues: ["email", "media", "booking-expiry", "tickets", "maintenance"] },
+      {
+        queues: [
+          "email",
+          "media",
+          "booking-expiry",
+          "tickets",
+          "payments",
+          "refunds",
+          "fanout",
+          "exports",
+          "maintenance",
+        ],
+      },
       "worker started",
     ),
   )
@@ -140,6 +213,10 @@ async function shutdown(signal: string) {
     mediaWorker.close(),
     expiryWorker.close(),
     ticketsWorker.close(),
+    paymentsWorker.close(),
+    refundsWorker.close(),
+    fanoutWorker.close(),
+    exportsWorker.close(),
     maintenanceWorker.close(),
   ]);
   await closeQueues();

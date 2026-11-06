@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../../middleware/auth.js";
 import { byUser, limiter } from "../../middleware/rate-limit.js";
 import { validate } from "../../middleware/validate.js";
+import * as attendees from "./attendees.service.js";
 import * as checkins from "./checkins.service.js";
 import {
   addStaffBody,
@@ -115,4 +116,34 @@ staffRouter.delete("/:userId", validate({ params: staffParams }), async (req, re
   const { id, userId } = req.params as { id: string; userId: string };
   await checkins.removeStaff(req.auth!, id, userId, req.ip ?? null);
   res.status(204).end();
+});
+
+/** Mounted at /api/v1/events/:id/attendees (organizer, managers, admins). */
+export const attendeesRouter = Router({ mergeParams: true });
+attendeesRouter.use(privateNoStore, authenticate);
+
+attendeesRouter.get(
+  "/",
+  validate({ params: eventParams, query: attendees.attendeesQuery }),
+  async (req, res) => {
+    res.json(
+      await attendees.list(
+        req.auth!,
+        idOf(req.params),
+        req.query as unknown as attendees.AttendeesQuery,
+      ),
+    );
+  },
+);
+
+attendeesRouter.post("/export", validate({ params: eventParams }), async (req, res) => {
+  const exp = await attendees.requestExport(req.auth!, idOf(req.params), req.ip ?? null);
+  res.status(202).location(`/api/v1/exports/${exp.id}`).json({ export: exp });
+});
+
+/** Mounted at /api/v1/exports */
+export const exportsRouter = Router();
+exportsRouter.use(privateNoStore, authenticate);
+exportsRouter.get("/:id", validate({ params: ticketIdParams }), async (req, res) => {
+  res.json({ export: await attendees.getExport(req.auth!, idOf(req.params)) });
 });

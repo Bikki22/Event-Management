@@ -24,6 +24,16 @@ export interface EmailPayloads {
     totalAmount: number; // minor units
     currency: string;
   };
+  "booking.refunded": {
+    name: string;
+    eventTitle: string;
+    bookingCode: string;
+    amount: number; // minor units
+    currency: string;
+    reason: string;
+    free: boolean;
+  };
+  "export.ready": { name: string; eventTitle: string; rowCount: number; exportId: string };
 }
 export type EmailType = keyof EmailPayloads;
 
@@ -69,6 +79,9 @@ function layout(opts: {
   ].join("\n");
   return { html, text };
 }
+
+const fmtMoney = (minor: number, currency: string) =>
+  `${currency} ${(minor / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
 
 const link = (path: string, token: string | null) => {
   if (!token) throw new UnrecoverableError("token already scrubbed; email was sent before");
@@ -178,6 +191,43 @@ const renderers: { [K in EmailType]: (p: EmailPayloads[K]) => RenderedEmail } = 
       }),
     };
   },
+  "booking.refunded": (p) => ({
+    subject: p.free
+      ? `Your booking ${p.bookingCode} for ${p.eventTitle} was cancelled`
+      : `Refund for ${p.eventTitle} (${p.bookingCode})`,
+    ...layout({
+      preheader: p.free ? "Your tickets were cancelled." : "Your refund is on its way.",
+      greeting: `Hi ${p.name},`,
+      paragraphs: [
+        `Reason: ${p.reason}`,
+        p.free
+          ? `Your free booking ${p.bookingCode} has been cancelled and its tickets are no longer valid.`
+          : `We're refunding ${fmtMoney(p.amount, p.currency)} for booking ${p.bookingCode}. Depending on your payment method it can take a few days to show up.`,
+        "The tickets of this booking can no longer be used.",
+      ],
+      button: {
+        label: "View my bookings",
+        url: new URL("/me/bookings", env.FRONTEND_URL).toString(),
+      },
+      footer: "Questions? Reply to this email.",
+    }),
+  }),
+  "export.ready": (p) => ({
+    subject: `Attendee export for ${p.eventTitle} is ready`,
+    ...layout({
+      preheader: `${p.rowCount} attendees exported.`,
+      greeting: `Hi ${p.name},`,
+      paragraphs: [
+        `Your attendee list for ${p.eventTitle} (${p.rowCount} rows) is ready to download.`,
+        "For privacy the download link is only valid for a short time; open it from your dashboard.",
+      ],
+      button: {
+        label: "Download CSV",
+        url: new URL(`/organizer/exports/${p.exportId}`, env.FRONTEND_URL).toString(),
+      },
+      footer: "This file contains personal data. Store it safely and delete it when you're done.",
+    }),
+  }),
 };
 
 export function renderEmail(type: string, payload: unknown): RenderedEmail {

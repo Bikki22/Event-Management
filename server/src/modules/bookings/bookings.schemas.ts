@@ -19,6 +19,7 @@ export const createBookingBody = z
         error: `At most ${MAX_TICKETS_PER_BOOKING} tickets per booking`,
       }),
     contactPhone: phone.optional(), // defaults to the account phone
+    promoCode: z.string().trim().min(3).max(32).optional(),
   })
   .strict();
 

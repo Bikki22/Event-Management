@@ -1,4 +1,6 @@
 import type {
+  PromoCode,
+  Refund,
   Booking,
   BookingItem,
   Event,
@@ -11,6 +13,8 @@ import { variantsOf } from "../uploads/uploads.dto.js";
 export type FullBooking = Booking & {
   event: Event & { cover: Upload | null };
   items: (BookingItem & { ticketType: TicketType; tickets: Ticket[] })[];
+  refund?: Refund | null;
+  promoCode?: PromoCode | null;
 };
 
 export const fullBookingInclude = {
@@ -19,6 +23,8 @@ export const fullBookingInclude = {
     include: { ticketType: true, tickets: { orderBy: { id: "asc" } } },
     orderBy: { ticketTypeId: "asc" },
   },
+  refund: true,
+  promoCode: true,
 } as const;
 
 /** Amounts are minor units (paisa). */
@@ -52,6 +58,17 @@ export const toBookingDto = (b: FullBooking, opts: { includeContact?: boolean } 
   confirmedAt: b.confirmedAt?.toISOString() ?? null,
   cancelledAt: b.cancelledAt?.toISOString() ?? null,
   createdAt: b.createdAt.toISOString(),
+  promoCode: b.promoCode ? b.promoCode.code : null,
+  refund: b.refund
+    ? {
+        id: b.refund.id,
+        status: b.refund.status,
+        amount: Number(b.refund.amount),
+        reason: b.refund.reason,
+        manual: b.refund.manual,
+        completedAt: b.refund.completedAt?.toISOString() ?? null,
+      }
+    : null,
   tickets: b.items.flatMap((i) =>
     i.tickets.map((t) => ({
       id: t.id,

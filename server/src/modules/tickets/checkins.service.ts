@@ -2,6 +2,7 @@ import type { Event } from "../../generated/prisma/client.js";
 import { writeAudit } from "../../lib/audit.js";
 import { AppError, Conflict, NotFound } from "../../lib/errors.js";
 import { logger } from "../../lib/logger.js";
+import { checkinsTotal } from "../../lib/metrics.js";
 import { prisma } from "../../lib/prisma.js";
 import type { AuthContext } from "../../middleware/auth.js";
 import type { AddStaffBody } from "./tickets.schemas.js";
@@ -62,6 +63,7 @@ export async function checkIn(auth: AuthContext, eventId: string, ticketCode: st
   });
 
   if (rows.length === 1 && t) {
+    checkinsTotal.inc({ result: "admitted" });
     log.info({ eventId, ticketId: t.id, scannerId: auth.userId }, "checkin.admitted");
     return {
       result: "admitted" as const,
@@ -77,6 +79,9 @@ export async function checkIn(auth: AuthContext, eventId: string, ticketCode: st
   }
 
   // why not? (the scanner app shows a different screen for each)
+  checkinsTotal.inc({
+    result: !t ? "not_found" : t.eventId !== eventId ? "wrong_event" : t.status,
+  });
   log.info({ eventId, scannerId: auth.userId, found: !!t, status: t?.status }, "checkin.rejected");
   if (!t) throw new AppError(404, "TICKET_NOT_FOUND", "No ticket with this code");
   if (t.eventId !== eventId) throw Conflict("WRONG_EVENT", "This ticket is for a different event");

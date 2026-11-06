@@ -119,7 +119,8 @@ eventsRouter.post(
       req.ip ?? null,
     );
     manageResponse(res, event.version);
-    res.json({ event });
+    // 202: refunds and emails for existing bookings continue in the background
+    res.status(202).json({ event });
   },
 );
 

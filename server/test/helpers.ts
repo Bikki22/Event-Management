@@ -8,7 +8,7 @@ export const api = () => request(app);
 
 /** Wipes all auth data and Redis (rate limits, revoked sessions, queues) between tests. */
 export async function resetState(): Promise<void> {
-  await prisma.$executeRaw`TRUNCATE tickets, booking_items, bookings, event_staff, ticket_types, events, venues, uploads, categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE exports, refunds, payments, payment_webhook_events, tickets, booking_items, bookings, promo_codes, event_staff, ticket_types, events, venues, uploads, categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
   await redis.flushdb();
 }
 

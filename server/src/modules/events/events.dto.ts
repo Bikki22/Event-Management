@@ -183,6 +183,8 @@ export interface ManageEventDto extends Omit<PublicEventDto, "ticketTypes"> {
   createdAt: string;
   updatedAt: string;
   ticketTypes: ManageTicketTypeDto[];
+  /** only for cancelled events: how far the refund fan-out got */
+  refundProgress?: { remaining: number; refunded: number; cancelled: number };
 }
 
 export const toManageEvent = (e: FullEvent): ManageEventDto => ({
