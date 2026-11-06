@@ -17,21 +17,21 @@ const schema = z
     PROCESS_TYPE: z.enum(["api", "worker", "scheduler"]).default("api"),
     APP_VERSION: z.string().default("dev"),
     APP_NAME: z.string().default("EMS"),
-    PORT: z.coerce.number().int().positive().default(3000),
+    PORT: z.coerce.number().int().positive().default(4000),
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
     TRUST_PROXY: z.string().default("loopback"),
     CORS_ORIGINS: z
       .string()
-      .default("http://localhost:5173")
+      .default("http://localhost:3000")
       .transform((s) =>
         s
           .split(",")
           .map((o) => o.trim())
           .filter(Boolean),
       ),
-    FRONTEND_URL: z.url().default("http://localhost:5173"),
+    FRONTEND_URL: z.url().default("http://localhost:3000"),
 
     // ---- Database / Redis ----
     DATABASE_URL: z.url(),

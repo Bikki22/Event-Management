@@ -35,11 +35,11 @@ Sign in again (or wait up to 60 s) and the account has admin access.
 
 ## 3. Try it in Postman
 
-Base URL: `http://localhost:3000/api/v1`. For every request below, set **Authorization → Bearer Token** to the `accessToken` from login (or `{{accessToken}}` if you use the script from `auth.md` §2.1).
+Base URL: `http://localhost:4000/api/v1`. For every request below, set **Authorization → Bearer Token** to the `accessToken` from login (or `{{accessToken}}` if you use the script from `auth.md` §2.1).
 
 #### Update my profile
 
-`PATCH http://localhost:3000/api/v1/me`
+`PATCH http://localhost:4000/api/v1/me`
 
 ```json
 {
@@ -79,11 +79,11 @@ These fail with `400 VALIDATION_FAILED`:
 First make an admin (§2), log in as them and use their token.
 
 ```
-GET http://localhost:3000/api/v1/admin/users
-GET http://localhost:3000/api/v1/admin/users?limit=2
-GET http://localhost:3000/api/v1/admin/users?q=gmail
-GET http://localhost:3000/api/v1/admin/users?role=organizer
-GET http://localhost:3000/api/v1/admin/users?status=suspended
+GET http://localhost:4000/api/v1/admin/users
+GET http://localhost:4000/api/v1/admin/users?limit=2
+GET http://localhost:4000/api/v1/admin/users?q=gmail
+GET http://localhost:4000/api/v1/admin/users?role=organizer
+GET http://localhost:4000/api/v1/admin/users?status=suspended
 ```
 
 Response:
@@ -99,11 +99,11 @@ Next page: copy `nextCursor` into `?limit=2&cursor=eyJpZCI6…`.
 
 #### Admin: get one user
 
-`GET http://localhost:3000/api/v1/admin/users/{id}` (copy an `id` from the list)
+`GET http://localhost:4000/api/v1/admin/users/{id}` (copy an `id` from the list)
 
 #### Admin: suspend / reactivate / change role
 
-`PATCH http://localhost:3000/api/v1/admin/users/{id}`
+`PATCH http://localhost:4000/api/v1/admin/users/{id}`
 
 ```json
 { "status": "suspended" }

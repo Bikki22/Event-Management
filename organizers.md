@@ -50,13 +50,13 @@ Any user with a **verified email** can become an organizer. Their profile starts
 
 ## 4. Try it in Postman
 
-Base URL `http://localhost:3000/api/v1`, Bearer token of the user (see `auth.md` §2.1).
+Base URL `http://localhost:4000/api/v1`, Bearer token of the user (see `auth.md` §2.1).
 
 **Step 0: verify the email first.** Register, open Mailpit (`http://localhost:8025`), copy the token from the link and `POST /auth/verify-email` with `{ "token": "…" }`. Otherwise you get `403 EMAIL_NOT_VERIFIED`.
 
 #### Become an organizer
 
-`POST http://localhost:3000/api/v1/me/organizer-profile`
+`POST http://localhost:4000/api/v1/me/organizer-profile`
 
 ```json
 {
@@ -78,9 +78,9 @@ With your own slug and a logo:
 
 #### View / edit my profile
 
-`GET http://localhost:3000/api/v1/me/organizer-profile`
+`GET http://localhost:4000/api/v1/me/organizer-profile`
 
-`PATCH http://localhost:3000/api/v1/me/organizer-profile`
+`PATCH http://localhost:4000/api/v1/me/organizer-profile`
 
 ```json
 {
@@ -97,7 +97,7 @@ Remove the website:
 
 #### Payout details
 
-`PUT http://localhost:3000/api/v1/me/organizer-profile/payout`
+`PUT http://localhost:4000/api/v1/me/organizer-profile/payout`
 
 eSewa:
 
@@ -135,22 +135,22 @@ Response shows it masked:
 }
 ```
 
-`DELETE http://localhost:3000/api/v1/me/organizer-profile/payout` → `204`.
+`DELETE http://localhost:4000/api/v1/me/organizer-profile/payout` → `204`.
 
 #### Public page (no token)
 
-`GET http://localhost:3000/api/v1/organizers/kathmandu-live-events`
+`GET http://localhost:4000/api/v1/organizers/kathmandu-live-events`
 
 #### Admin: review organizers (admin token, see `users.md` §2)
 
 ```
-GET http://localhost:3000/api/v1/admin/organizers
-GET http://localhost:3000/api/v1/admin/organizers?status=pending
-GET http://localhost:3000/api/v1/admin/organizers?q=kathmandu
-GET http://localhost:3000/api/v1/admin/organizers/{userId}
+GET http://localhost:4000/api/v1/admin/organizers
+GET http://localhost:4000/api/v1/admin/organizers?status=pending
+GET http://localhost:4000/api/v1/admin/organizers?q=kathmandu
+GET http://localhost:4000/api/v1/admin/organizers/{userId}
 ```
 
-`PATCH http://localhost:3000/api/v1/admin/organizers/{userId}/verification`
+`PATCH http://localhost:4000/api/v1/admin/organizers/{userId}/verification`
 
 Verify:
 

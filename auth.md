@@ -71,7 +71,7 @@ Base path `/api/v1`. Every error is problem+json (`backend.md` §4.3).
 **Before you start**
 
 - Run `docker compose up -d postgres redis mailpit`, `npm run dev` (API) and `npm run dev:worker` (sends emails) inside `server/`.
-- Base URL: `http://localhost:3000/api/v1`. Every request with a body uses **Body → raw → JSON**.
+- Base URL: `http://localhost:4000/api/v1`. Every request with a body uses **Body → raw → JSON**.
 - **Emails** (verify / reset links) land in Mailpit: open `http://localhost:8025`, open the email, copy the `token=...` value from the link.
 - **Access token:** copy `accessToken` from the register/login response. For protected routes, go to **Authorization → Bearer Token** and paste it. It expires after 15 min; call refresh to get a new one.
 - **Refresh cookie:** Postman stores the `ems_rt` cookie automatically (check **Cookies** under the Send button). Nothing to copy by hand.
@@ -91,7 +91,7 @@ Then for protected routes set **Authorization → Bearer Token** to `{{accessTok
 
 #### 1. Register
 
-`POST http://localhost:3000/api/v1/auth/register`
+`POST http://localhost:4000/api/v1/auth/register`
 
 ```json
 {
@@ -162,7 +162,7 @@ Error cases to try:
 
 #### 2. Login
 
-`POST http://localhost:3000/api/v1/auth/login`
+`POST http://localhost:4000/api/v1/auth/login`
 
 ```json
 {
@@ -181,12 +181,12 @@ Wrong password → `401 INVALID_CREDENTIALS`:
 
 #### 3. Get current user
 
-`GET http://localhost:3000/api/v1/me`
+`GET http://localhost:4000/api/v1/me`
 Authorization: **Bearer Token** = `accessToken`. No body.
 
 #### 4. Refresh access token
 
-`POST http://localhost:3000/api/v1/auth/refresh`
+`POST http://localhost:4000/api/v1/auth/refresh`
 No body. **Headers** tab, add:
 
 | Key                | Value   |
@@ -203,7 +203,7 @@ Without the header → `403 CSRF_CHECK_FAILED`. Without the cookie → `401 REFR
 
 #### 5. Verify email
 
-`POST http://localhost:3000/api/v1/auth/verify-email`
+`POST http://localhost:4000/api/v1/auth/verify-email`
 Copy the token from the "Verify your email" message in Mailpit:
 
 ```json
@@ -216,12 +216,12 @@ Response `200 { "user": { …, "emailVerified": true } }`. Sending the same toke
 
 #### 6. Resend verification email
 
-`POST http://localhost:3000/api/v1/auth/resend-verification`
+`POST http://localhost:4000/api/v1/auth/resend-verification`
 Bearer token, no body. Response `202`. Already verified → `409 ALREADY_VERIFIED`.
 
 #### 7. Forgot password
 
-`POST http://localhost:3000/api/v1/auth/forgot-password`
+`POST http://localhost:4000/api/v1/auth/forgot-password`
 
 ```json
 {
@@ -233,7 +233,7 @@ Always `202` with an empty body, even for an email that doesn't exist. Check Mai
 
 #### 8. Reset password
 
-`POST http://localhost:3000/api/v1/auth/reset-password`
+`POST http://localhost:4000/api/v1/auth/reset-password`
 Copy the token from the reset email link:
 
 ```json
@@ -247,7 +247,7 @@ Response `204`. All devices are signed out, and you get a "password was changed"
 
 #### 9. Change password (while logged in)
 
-`POST http://localhost:3000/api/v1/auth/change-password`
+`POST http://localhost:4000/api/v1/auth/change-password`
 Bearer token:
 
 ```json
@@ -261,7 +261,7 @@ Response `204`. This device stays signed in and every other device is signed out
 
 #### 10. List my sessions (devices)
 
-`GET http://localhost:3000/api/v1/auth/sessions`
+`GET http://localhost:4000/api/v1/auth/sessions`
 Bearer token. Response `200`:
 
 ```json
@@ -281,12 +281,12 @@ Bearer token. Response `200`:
 
 #### 11. Sign out one device
 
-`DELETE http://localhost:3000/api/v1/auth/sessions/PASTE_SESSION_ID`
+`DELETE http://localhost:4000/api/v1/auth/sessions/PASTE_SESSION_ID`
 Bearer token, `id` from the list above. Response `204`. Someone else's or an unknown id → `404`.
 
 #### 12. Logout
 
-`POST http://localhost:3000/api/v1/auth/logout`
+`POST http://localhost:4000/api/v1/auth/logout`
 Bearer token, no body. Response `204`. The same access token on `GET /me` now returns `401 SESSION_REVOKED`.
 
 #### Suggested test order

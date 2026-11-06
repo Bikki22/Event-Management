@@ -31,14 +31,14 @@ Adds 10 top-level categories and 20 sub-categories (Music, Comedy, Theatre & Art
 
 ## 3. Try it in Postman
 
-Base URL: `http://localhost:3000/api/v1`.
+Base URL: `http://localhost:4000/api/v1`.
 
 #### Public (no token)
 
 ```
-GET http://localhost:3000/api/v1/categories
-GET http://localhost:3000/api/v1/categories/music
-GET http://localhost:3000/api/v1/categories/concerts
+GET http://localhost:4000/api/v1/categories
+GET http://localhost:4000/api/v1/categories/music
+GET http://localhost:4000/api/v1/categories/concerts
 ```
 
 Response of `GET /categories`:
@@ -62,7 +62,7 @@ Response of `GET /categories`:
 
 #### Admin (Bearer token of an admin, see `users.md` §2)
 
-Create a top-level category: `POST http://localhost:3000/api/v1/admin/categories`
+Create a top-level category: `POST http://localhost:4000/api/v1/admin/categories`
 
 ```json
 { "name": "Charity" }
@@ -80,7 +80,7 @@ Create a sub-category (copy the parent's `id` from `GET /categories`):
 { "name": "Jazz", "parentId": "PASTE-MUSIC-ID-HERE" }
 ```
 
-Update: `PATCH http://localhost:3000/api/v1/admin/categories/{id}`
+Update: `PATCH http://localhost:4000/api/v1/admin/categories/{id}`
 
 ```json
 { "name": "Charity & Fundraisers", "sortOrder": 5 }
@@ -92,7 +92,7 @@ Move to the top level:
 { "parentId": null }
 ```
 
-Delete: `DELETE http://localhost:3000/api/v1/admin/categories/{id}` → `204`. A category with sub-categories returns `409 CATEGORY_HAS_CHILDREN`.
+Delete: `DELETE http://localhost:4000/api/v1/admin/categories/{id}` → `204`. A category with sub-categories returns `409 CATEGORY_HAS_CHILDREN`.
 
 Errors to try:
 
