@@ -7,7 +7,15 @@ import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { requestContext } from "./middleware/request-context.js";
 import { applySecurity } from "./middleware/security.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import { bookingsRouter, myBookingsRouter } from "./modules/bookings/bookings.routes.js";
 import { eventsRouter, myEventsRouter } from "./modules/events/events.routes.js";
+import {
+  checkInsRouter,
+  myStaffEventsRouter,
+  myTicketsRouter,
+  staffRouter,
+  ticketsRouter,
+} from "./modules/tickets/tickets.routes.js";
 import { uploadsRouter } from "./modules/uploads/uploads.routes.js";
 import { venuesRouter } from "./modules/venues/venues.routes.js";
 import { categoriesRouter } from "./modules/categories/categories.routes.js";
@@ -49,10 +57,17 @@ export function buildApp(): Express {
   api.use("/auth", authRouter);
   api.use("/me/organizer-profile", myOrganizerRouter); // before /me
   api.use("/me/events", myEventsRouter); // before /me
+  api.use("/me/bookings", myBookingsRouter); // before /me
+  api.use("/me/tickets", myTicketsRouter); // before /me
+  api.use("/me/staff-events", myStaffEventsRouter); // before /me
   api.use("/me", meRouter);
   api.use("/organizers", organizersRouter);
   api.use("/venues", venuesRouter);
+  api.use("/events/:id/check-ins", checkInsRouter); // before /events
+  api.use("/events/:id/staff", staffRouter); // before /events
   api.use("/events", eventsRouter);
+  api.use("/bookings", bookingsRouter);
+  api.use("/tickets", ticketsRouter);
   api.use("/uploads", uploadsRouter);
   api.use("/categories", categoriesRouter);
   api.use("/admin", adminRouter);

@@ -8,6 +8,13 @@ import { purgeExpiredAuthData } from "./modules/auth/auth.jobs.js";
 import { processEmail, type EmailJobData } from "./modules/notifications/notifications.jobs.js";
 import { relayOutbox } from "./modules/notifications/notifications.service.js";
 import { completeEndedEvents } from "./modules/events/events.service.js";
+import {
+  expire as expireBooking,
+  sweepExpired as sweepExpiredBookings,
+  type BookingExpiryJobData,
+} from "./modules/bookings/bookings.service.js";
+import { generateTicketPdf, sweepMissingPdfs } from "./modules/tickets/tickets.jobs.js";
+import type { TicketPdfJobData } from "./modules/tickets/tickets.service.js";
 import { processMedia } from "./modules/uploads/uploads.jobs.js";
 import { purgeStaleUploads, type MediaJobData } from "./modules/uploads/uploads.service.js";
 
@@ -48,12 +55,33 @@ const mediaWorker = new Worker<MediaJobData>("media", traced("media", processMed
 });
 onFailed(mediaWorker, "media");
 
+// ---- booking expiry (delayed job per pending booking) ----
+const expiryWorker = new Worker<BookingExpiryJobData>(
+  "booking-expiry",
+  traced("booking-expiry", (job) => expireBooking(job.data.bookingId)),
+  { connection: bullConnection, concurrency: 10 },
+);
+onFailed(expiryWorker, "booking-expiry");
+
+// ---- tickets (PDF rendering; CPU-bound) ----
+const ticketsWorker = new Worker<TicketPdfJobData>(
+  "tickets",
+  traced("tickets", generateTicketPdf),
+  {
+    connection: bullConnection,
+    concurrency: 5,
+  },
+);
+onFailed(ticketsWorker, "tickets");
+
 // ---- maintenance (repeatable) ----
 const maintenanceHandlers: Record<string, () => Promise<unknown>> = {
   "outbox-relay": () => relayOutbox(),
   "purge-auth": () => purgeExpiredAuthData(),
   "purge-uploads": () => purgeStaleUploads(),
   "complete-events": () => completeEndedEvents(),
+  "expire-bookings": () => sweepExpiredBookings(),
+  "ticket-pdfs": () => sweepMissingPdfs(),
 };
 
 const maintenanceWorker = new Worker(
@@ -85,7 +113,12 @@ async function registerSchedules() {
 }
 
 registerSchedules()
-  .then(() => logger.info({ queues: ["email", "media", "maintenance"] }, "worker started"))
+  .then(() =>
+    logger.info(
+      { queues: ["email", "media", "booking-expiry", "tickets", "maintenance"] },
+      "worker started",
+    ),
+  )
   .catch((err: unknown) => {
     logger.fatal({ err }, "failed to register job schedules");
     process.exit(1);
@@ -102,7 +135,13 @@ async function shutdown(signal: string) {
     process.exit(1);
   }, 25_000).unref();
   // let in-flight jobs finish; stalled-job detection re-queues anything interrupted
-  await Promise.all([emailWorker.close(), mediaWorker.close(), maintenanceWorker.close()]);
+  await Promise.all([
+    emailWorker.close(),
+    mediaWorker.close(),
+    expiryWorker.close(),
+    ticketsWorker.close(),
+    maintenanceWorker.close(),
+  ]);
   await closeQueues();
   await disconnectPrisma();
   await disconnectRedis();

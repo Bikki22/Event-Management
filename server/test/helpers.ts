@@ -8,7 +8,7 @@ export const api = () => request(app);
 
 /** Wipes all auth data and Redis (rate limits, revoked sessions, queues) between tests. */
 export async function resetState(): Promise<void> {
-  await prisma.$executeRaw`TRUNCATE ticket_types, events, venues, uploads, categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE tickets, booking_items, bookings, event_staff, ticket_types, events, venues, uploads, categories, organizer_profiles, users, auth_sessions, refresh_tokens, verification_tokens, notifications, audit_logs RESTART IDENTITY CASCADE`;
   await redis.flushdb();
 }
 
@@ -86,3 +86,54 @@ export async function makeAdmin(email = "admin@example.com") {
   await prisma.user.update({ where: { email }, data: { role: "admin" } });
   return (await login(email)).accessToken;
 }
+
+/** A published online event with one ticket type, owned by a (verified) organizer token. */
+export async function publishedEvent(
+  token: string,
+  opts: { price?: number; quantity?: number; maxPerOrder?: number; title?: string } = {},
+) {
+  const cat =
+    (await prisma.category.findUnique({ where: { slug: "music" } })) ??
+    (await prisma.category.create({ data: { name: "Music", slug: "music" } }));
+  const startsAt = new Date(Date.now() + 7 * 86_400_000);
+  const ev = await api()
+    .post("/api/v1/events")
+    .set(bearer(token))
+    .send({
+      title: opts.title ?? "Test Gig",
+      summary: "A test event",
+      categoryId: cat.id,
+      mode: "online",
+      onlineUrl: "https://meet.example.com/gig",
+      startsAt: startsAt.toISOString(),
+      endsAt: new Date(startsAt.getTime() + 3 * 3_600_000).toISOString(),
+    });
+  if (ev.status !== 201) throw new Error(`event setup failed: ${ev.text}`);
+  const tt = await api()
+    .post(`/api/v1/events/${ev.body.event.id}/ticket-types`)
+    .set(bearer(token))
+    .send({
+      name: "General",
+      price: opts.price ?? 50000,
+      quantityTotal: opts.quantity ?? 100,
+      maxPerOrder: opts.maxPerOrder ?? 10,
+    });
+  if (tt.status !== 201) throw new Error(`ticket type setup failed: ${tt.text}`);
+  const pub = await api().post(`/api/v1/events/${ev.body.event.id}/publish`).set(bearer(token));
+  if (pub.status !== 200) throw new Error(`publish failed: ${pub.text}`);
+  return { eventId: ev.body.event.id as string, ticketTypeId: tt.body.ticketType.id as string };
+}
+
+/** Registered user with a verified email (allowed to book). */
+export async function buyer(email = "buyer@example.com") {
+  const { res, accessToken } = await register(email);
+  const id = res.body.user.id as string;
+  await prisma.user.update({ where: { id }, data: { emailVerifiedAt: new Date() } });
+  await redis.del(`user:state:${id}`);
+  return { id, token: accessToken };
+}
+
+let keySeq = 0;
+/** POST /bookings with a fresh (or given) Idempotency-Key. */
+export const book = (token: string, body: object, key = `test-key-${Date.now()}-${keySeq++}`) =>
+  api().post("/api/v1/bookings").set(bearer(token)).set("Idempotency-Key", key).send(body);

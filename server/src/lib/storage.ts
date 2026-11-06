@@ -10,6 +10,7 @@ import {
   S3ServiceException,
 } from "@aws-sdk/client-s3";
 import { createPresignedPost, type PresignedPost } from "@aws-sdk/s3-presigned-post";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "../config/env.js";
 
 /**
@@ -73,15 +74,37 @@ export async function getObjectBuffer(key: string, maxBytes: number): Promise<Bu
   return Buffer.from(await r.Body!.transformToByteArray());
 }
 
-export async function putObject(key: string, body: Buffer, contentType: string): Promise<void> {
+export async function putObject(
+  key: string,
+  body: Buffer,
+  contentType: string,
+  cacheControl = "public, max-age=31536000, immutable", // media keys are unique per upload
+): Promise<void> {
   await s3.send(
     new PutObjectCommand({
       Bucket,
       Key: key,
       Body: body,
       ContentType: contentType,
-      CacheControl: "public, max-age=31536000, immutable", // keys are unique per upload
+      CacheControl: cacheControl,
     }),
+  );
+}
+
+/** Short-lived download link for a private object (e.g. a ticket PDF). */
+export function signedDownloadUrl(
+  key: string,
+  opts: { expiresInSeconds: number; filename: string },
+): Promise<string> {
+  return getSignedUrl(
+    s3,
+    new GetObjectCommand({
+      Bucket,
+      Key: key,
+      ResponseContentDisposition: `attachment; filename="${opts.filename.replace(/[^\w.-]/g, "_")}"`,
+      ResponseCacheControl: "private, no-store",
+    }),
+    { expiresIn: opts.expiresInSeconds },
   );
 }
 

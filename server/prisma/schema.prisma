@@ -89,6 +89,33 @@ enum EventVisibility {
   @@map("event_visibility")
 }
 
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+  expired
+  refunded
+  partially_refunded
+
+  @@map("booking_status")
+}
+
+enum TicketStatus {
+  valid
+  checked_in
+  cancelled
+  refunded
+
+  @@map("ticket_status")
+}
+
+enum StaffRole {
+  manager
+  scanner
+
+  @@map("staff_role")
+}
+
 enum TokenPurpose {
   email_verify
   password_reset
@@ -132,6 +159,9 @@ model User {
   auditLogs          AuditLog[]
   organizerProfile   OrganizerProfile?
   uploads            Upload[]
+  bookings           Booking[]
+  staffOf            EventStaff[]        @relation("StaffMember")
+  checkIns           Ticket[]            @relation("CheckedInBy")
 
   @@map("users")
 }
@@ -351,6 +381,9 @@ model Event {
   category    Category?        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   cover       Upload?          @relation(fields: [coverUploadId], references: [id], onDelete: SetNull)
   ticketTypes TicketType[]
+  bookings    Booking[]
+  tickets     Ticket[]
+  eventStaffs EventStaff[]
 
   @@index([organizerId, createdAt(sort: Desc)])
   @@index([categoryId, startsAt])
@@ -380,8 +413,100 @@ model TicketType {
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
 
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event        Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  bookingItems BookingItem[]
+  tickets      Ticket[]
 
   @@unique([eventId, name])
   @@map("ticket_types")
+}
+
+/// An order. Stock is held (quantity_reserved) while pending; confirmed moves it to quantity_sold.
+model Booking {
+  id             String        @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  bookingCode    String        @unique @map("booking_code")
+  userId         String        @map("user_id") @db.Uuid
+  eventId        String        @map("event_id") @db.Uuid
+  status         BookingStatus @default(pending)
+  subtotal       BigInt
+  discountAmount BigInt        @default(0) @map("discount_amount")
+  feeAmount      BigInt        @default(0) @map("fee_amount")
+  totalAmount    BigInt        @map("total_amount")
+  currency       String        @db.Char(3)
+  expiresAt      DateTime      @map("expires_at") @db.Timestamptz
+  confirmedAt    DateTime?     @map("confirmed_at") @db.Timestamptz
+  cancelledAt    DateTime?     @map("cancelled_at") @db.Timestamptz
+  idempotencyKey String?       @map("idempotency_key")
+  contactEmail   String        @map("contact_email")
+  contactPhone   String?       @map("contact_phone")
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  event Event         @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  items BookingItem[]
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([eventId, status])
+  @@map("bookings")
+}
+
+model BookingItem {
+  id           String @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  bookingId    String @map("booking_id") @db.Uuid
+  ticketTypeId String @map("ticket_type_id") @db.Uuid
+  quantity     Int
+  unitPrice    BigInt @map("unit_price") /// price snapshot at booking time
+  lineTotal    BigInt @map("line_total")
+
+  booking    Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  ticketType TicketType @relation(fields: [ticketTypeId], references: [id], onDelete: Restrict)
+  tickets    Ticket[]
+
+  @@unique([bookingId, ticketTypeId])
+  @@map("booking_items")
+}
+
+/// One row per admission, issued when the booking is confirmed. ticket_code is encoded in the QR.
+model Ticket {
+  id             String       @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  ticketCode     String       @unique @map("ticket_code")
+  bookingItemId  String       @map("booking_item_id") @db.Uuid
+  eventId        String       @map("event_id") @db.Uuid
+  ticketTypeId   String       @map("ticket_type_id") @db.Uuid
+  holderName     String?      @map("holder_name")
+  holderEmail    String?      @map("holder_email")
+  status         TicketStatus @default(valid)
+  checkedInAt    DateTime?    @map("checked_in_at") @db.Timestamptz
+  checkedInBy    String?      @map("checked_in_by") @db.Uuid
+  pdfKey         String?      @map("pdf_key") /// private object key, set by the tickets worker
+  pdfGeneratedAt DateTime?    @map("pdf_generated_at") @db.Timestamptz
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  bookingItem BookingItem @relation(fields: [bookingItemId], references: [id], onDelete: Restrict)
+  event       Event       @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  ticketType  TicketType  @relation(fields: [ticketTypeId], references: [id], onDelete: Restrict)
+  scanner     User?       @relation("CheckedInBy", fields: [checkedInBy], references: [id], onDelete: SetNull)
+
+  @@index([bookingItemId])
+  @@index([eventId, status])
+  @@map("tickets")
+}
+
+/// Who may scan tickets (scanner) or help run an event (manager).
+model EventStaff {
+  eventId   String    @map("event_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  role      StaffRole
+  addedBy   String?   @map("added_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation("StaffMember", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, userId])
+  @@index([userId])
+  @@map("event_staff")
 }

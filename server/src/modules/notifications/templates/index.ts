@@ -14,6 +14,16 @@ export interface EmailPayloads {
   "auth.password_changed": { name: string; changedAt: string };
   "organizer.verified": { name: string; orgName: string };
   "organizer.rejected": { name: string; orgName: string; note: string };
+  "booking.confirmed": {
+    name: string;
+    eventTitle: string;
+    startsAt: string;
+    timezone: string;
+    bookingCode: string;
+    ticketCount: number;
+    totalAmount: number; // minor units
+    currency: string;
+  };
 }
 export type EmailType = keyof EmailPayloads;
 
@@ -139,6 +149,35 @@ const renderers: { [K in EmailType]: (p: EmailPayloads[K]) => RenderedEmail } = 
       footer: "You received this because you applied to become an organizer.",
     }),
   }),
+  "booking.confirmed": (p) => {
+    const when = new Intl.DateTimeFormat("en-GB", {
+      timeZone: p.timezone,
+      dateStyle: "full",
+      timeStyle: "short",
+    }).format(new Date(p.startsAt));
+    const total =
+      p.totalAmount === 0
+        ? "Free"
+        : `${p.currency} ${(p.totalAmount / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+    return {
+      subject: `Your tickets for ${p.eventTitle} (${p.bookingCode})`,
+      ...layout({
+        preheader: `${p.ticketCount} ticket(s) confirmed for ${p.eventTitle}.`,
+        greeting: `Hi ${p.name},`,
+        paragraphs: [
+          `Your booking ${p.bookingCode} is confirmed: ${p.ticketCount} ticket(s) for ${p.eventTitle}.`,
+          `When: ${when} (${p.timezone})`,
+          `Total: ${total}`,
+          "Open your tickets to see the QR codes or download the PDFs. Each QR admits one person once.",
+        ],
+        button: {
+          label: "View my tickets",
+          url: new URL("/me/tickets", env.FRONTEND_URL).toString(),
+        },
+        footer: "Keep your QR codes private: whoever scans first gets in.",
+      }),
+    };
+  },
 };
 
 export function renderEmail(type: string, payload: unknown): RenderedEmail {
