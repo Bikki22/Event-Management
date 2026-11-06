@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { fullName, phone } from "../users/users.schemas.js";
 import { PASSWORD_MAX, PASSWORD_MIN } from "./password.js";
 
 const email = z.email({ error: "Enter a valid email address" }).trim().toLowerCase().max(254);
@@ -19,12 +20,8 @@ export const registerBody = z
   .object({
     email,
     password,
-    fullName: z.string().trim().min(1).max(120),
-    phone: z
-      .string()
-      .trim()
-      .regex(/^\+?[0-9 ()-]{7,20}$/, { error: "Invalid phone number" })
-      .optional(),
+    fullName,
+    phone: phone.optional(),
   })
   .strict();
 

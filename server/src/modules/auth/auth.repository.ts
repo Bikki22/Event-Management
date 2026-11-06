@@ -160,14 +160,4 @@ export async function consumeVerificationToken(
 
 // ───────────── audit ─────────────
 
-export const writeAudit = (
-  entry: {
-    actorId: string | null;
-    action: string;
-    entityType: string;
-    entityId: string | null;
-    ip: string | null;
-    diff?: Prisma.InputJsonValue;
-  },
-  db: DbOrTx = prisma,
-) => db.auditLog.create({ data: entry, select: { id: true } });
+export { writeAudit } from "../../lib/audit.js";

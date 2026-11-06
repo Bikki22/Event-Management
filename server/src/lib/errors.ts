@@ -46,6 +46,13 @@ export function isUniqueViolation(err: unknown, field?: string): boolean {
   return JSON.stringify(err.meta ?? {}).includes(field);
 }
 
+/** True when `err` is a foreign-key violation (e.g. deleting a row that is still referenced). */
+export function isForeignKeyViolation(err: unknown): boolean {
+  if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2003") return true;
+  const cause = (err as { cause?: { originalCode?: string; code?: string } } | null)?.cause;
+  return (cause?.originalCode ?? cause?.code) === "23503";
+}
+
 /** Prisma / Postgres errors → API errors. DB constraints are our safety net. */
 export function mapDbError(err: unknown): AppError | null {
   if (err instanceof Prisma.PrismaClientKnownRequestError) {

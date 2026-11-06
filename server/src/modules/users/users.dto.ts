@@ -20,3 +20,19 @@ export const toUserDto = (u: User): UserDto => ({
   emailVerified: u.emailVerifiedAt !== null,
   createdAt: u.createdAt.toISOString(),
 });
+
+/** What admins see: adds account state. Still never the password hash. */
+export interface AdminUserDto extends UserDto {
+  status: User["status"];
+  emailVerifiedAt: string | null;
+  lastLoginAt: string | null;
+  updatedAt: string;
+}
+
+export const toAdminUserDto = (u: User): AdminUserDto => ({
+  ...toUserDto(u),
+  status: u.status,
+  emailVerifiedAt: u.emailVerifiedAt?.toISOString() ?? null,
+  lastLoginAt: u.lastLoginAt?.toISOString() ?? null,
+  updatedAt: u.updatedAt.toISOString(),
+});

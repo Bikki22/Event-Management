@@ -7,8 +7,10 @@ import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { requestContext } from "./middleware/request-context.js";
 import { applySecurity } from "./middleware/security.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import { categoriesRouter } from "./modules/categories/categories.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { meRouter } from "./modules/users/users.routes.js";
+import { adminRouter } from "./modules/admin/admin.routes.js";
 
 /** Builds the Express app (used by server.ts and by tests). */
 export function buildApp(): Express {
@@ -42,6 +44,8 @@ export function buildApp(): Express {
   });
   api.use("/auth", authRouter);
   api.use("/me", meRouter);
+  api.use("/categories", categoriesRouter);
+  api.use("/admin", adminRouter);
   app.use("/api/v1", api);
 
   app.use(notFoundHandler);
