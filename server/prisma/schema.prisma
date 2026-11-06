@@ -33,6 +33,14 @@ enum UserStatus {
   @@map("user_status")
 }
 
+enum OrgVerification {
+  pending
+  verified
+  rejected
+
+  @@map("org_verification")
+}
+
 enum TokenPurpose {
   email_verify
   password_reset
@@ -74,6 +82,7 @@ model User {
   verificationTokens VerificationToken[]
   notifications      Notification[]
   auditLogs          AuditLog[]
+  organizerProfile   OrganizerProfile?
 
   @@map("users")
 }
@@ -186,4 +195,26 @@ model Category {
 
   @@index([parentId])
   @@map("categories")
+}
+
+/// One-to-one with a user who became an organizer. `payoutDetails` is AES-256-GCM ciphertext.
+model OrganizerProfile {
+  userId             String          @id @map("user_id") @db.Uuid
+  orgName            String          @map("org_name")
+  slug               String          @unique @db.Citext
+  bio                String?
+  logoUrl            String?         @map("logo_url")
+  website            String?
+  verificationStatus OrgVerification @default(pending) @map("verification_status")
+  reviewNote         String?         @map("review_note")
+  reviewedAt         DateTime?       @map("reviewed_at") @db.Timestamptz
+  payoutMethod       String?         @map("payout_method")
+  payoutDetails      Json?           @map("payout_details")
+  createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([verificationStatus, createdAt(sort: Desc)])
+  @@map("organizer_profiles")
 }

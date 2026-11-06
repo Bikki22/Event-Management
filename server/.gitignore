@@ -7,3 +7,7 @@ src/generated/*
 .env.*
 !.env.example
 *.log
+auth.md
+backend.md
+.md*
+organizers.md

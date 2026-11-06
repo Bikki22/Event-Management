@@ -10,6 +10,7 @@ import { authRouter } from "./modules/auth/auth.routes.js";
 import { categoriesRouter } from "./modules/categories/categories.routes.js";
 import { healthRouter } from "./modules/health/health.routes.js";
 import { meRouter } from "./modules/users/users.routes.js";
+import { myOrganizerRouter, organizersRouter } from "./modules/organizers/organizers.routes.js";
 import { adminRouter } from "./modules/admin/admin.routes.js";
 
 /** Builds the Express app (used by server.ts and by tests). */
@@ -43,7 +44,9 @@ export function buildApp(): Express {
     res.json({ name: "Event Management System API", version: "v1" });
   });
   api.use("/auth", authRouter);
+  api.use("/me/organizer-profile", myOrganizerRouter); // before /me
   api.use("/me", meRouter);
+  api.use("/organizers", organizersRouter);
   api.use("/categories", categoriesRouter);
   api.use("/admin", adminRouter);
   app.use("/api/v1", api);

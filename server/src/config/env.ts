@@ -52,6 +52,18 @@ const schema = z
     EMAIL_VERIFY_TTL_HOURS: z.coerce.number().int().positive().default(24),
     PASSWORD_RESET_TTL_MINUTES: z.coerce.number().int().positive().default(30),
 
+    // ---- Encryption at rest (organizer payout details) ----
+    // 32-byte key as hex. Generate with: npm run keys:generate -- --write
+    DATA_ENCRYPTION_KEY: z
+      .string()
+      .regex(/^[0-9a-f]{64}$/i, { error: "must be 64 hex chars (32 bytes)" }),
+    DATA_ENCRYPTION_KEY_ID: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{1,32}$/)
+      .default("k1"),
+    // retired keys still needed to decrypt old rows: "id:hex,id:hex"
+    DATA_ENCRYPTION_OLD_KEYS: z.string().default(""),
+
     // ---- Email ----
     EMAIL_DRIVER: z.enum(["resend", "smtp", "console"]).default("smtp"),
     EMAIL_FROM: z.string().min(3).default("EMS <no-reply@ems.local>"),

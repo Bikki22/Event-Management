@@ -12,6 +12,8 @@ export interface EmailPayloads {
   "auth.verify_email": { name: string; token: string | null };
   "auth.password_reset": { name: string; token: string | null };
   "auth.password_changed": { name: string; changedAt: string };
+  "organizer.verified": { name: string; orgName: string };
+  "organizer.rejected": { name: string; orgName: string; note: string };
 }
 export type EmailType = keyof EmailPayloads;
 
@@ -102,6 +104,39 @@ const renderers: { [K in EmailType]: (p: EmailPayloads[K]) => RenderedEmail } = 
         'If this was you, no action is needed. If it wasn\'t, reset your password right away using "Forgot password" on the sign-in page.',
       ],
       footer: "This is a security notification for your account.",
+    }),
+  }),
+  "organizer.verified": (p) => ({
+    subject: `${p.orgName} is verified on ${env.APP_NAME}`,
+    ...layout({
+      preheader: "Your organizer profile has been approved.",
+      greeting: `Hi ${p.name},`,
+      paragraphs: [
+        `Good news: your organizer profile "${p.orgName}" has been verified.`,
+        "Your public page now shows a verified badge, and you can publish events.",
+      ],
+      button: {
+        label: "Open organizer dashboard",
+        url: new URL("/organizer", env.FRONTEND_URL).toString(),
+      },
+      footer: "You received this because you applied to become an organizer.",
+    }),
+  }),
+  "organizer.rejected": (p) => ({
+    subject: `Update on your ${env.APP_NAME} organizer application`,
+    ...layout({
+      preheader: "Your organizer profile needs changes.",
+      greeting: `Hi ${p.name},`,
+      paragraphs: [
+        `We couldn't verify your organizer profile "${p.orgName}" yet.`,
+        `Reason: ${p.note}`,
+        "Update your profile and it will be reviewed again automatically.",
+      ],
+      button: {
+        label: "Edit organizer profile",
+        url: new URL("/organizer/profile", env.FRONTEND_URL).toString(),
+      },
+      footer: "You received this because you applied to become an organizer.",
     }),
   }),
 };

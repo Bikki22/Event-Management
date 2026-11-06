@@ -23,13 +23,23 @@ const block = Object.entries(lines)
   .map(([k, v]) => `${k}=${v}`)
   .join("\n");
 
+// Data-encryption key: only generated when .env has none. Replacing it would make existing
+// encrypted rows unreadable; rotate by moving the old key to DATA_ENCRYPTION_OLD_KEYS first.
+const dataKeyLine = `DATA_ENCRYPTION_KEY=${randomBytes(32).toString("hex")}\nDATA_ENCRYPTION_KEY_ID=k1`;
+
 if (process.argv.includes("--write")) {
   const path = ".env";
   let content = existsSync(path) ? readFileSync(path, "utf8") : "";
   content = content.replace(/^JWT_(PRIVATE_KEY|PUBLIC_KEY|KEY_ID)=.*\r?\n?/gm, "");
   content = content.trimEnd() + "\n\n# ---- JWT (generated) ----\n" + block + "\n";
+  const hasDataKey = /^DATA_ENCRYPTION_KEY=[0-9a-f]{64}\s*$/im.test(content);
+  if (!hasDataKey) {
+    content = content.replace(/^DATA_ENCRYPTION_KEY(_ID)?=.*\r?\n?/gm, "");
+    content += "\n# ---- Encryption at rest (generated) ----\n" + dataKeyLine + "\n";
+  }
   writeFileSync(path, content);
   console.log(`Wrote new JWT key pair (kid=${kid}) to ${path}`);
+  if (!hasDataKey) console.log("Wrote a new DATA_ENCRYPTION_KEY");
 } else {
-  console.log(block);
+  console.log(block + "\n" + dataKeyLine);
 }

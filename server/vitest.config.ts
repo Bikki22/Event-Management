@@ -1,4 +1,4 @@
-import { generateKeyPairSync } from "node:crypto";
+import { generateKeyPairSync, randomBytes } from "node:crypto";
 import { defineConfig } from "vitest/config";
 
 // Fresh signing keys per test run: no secrets in files.
@@ -27,6 +27,8 @@ export default defineConfig({
       JWT_PRIVATE_KEY: privateKey,
       JWT_PUBLIC_KEY: publicKey,
       JWT_KEY_ID: "test",
+      DATA_ENCRYPTION_KEY: randomBytes(32).toString("hex"),
+      DATA_ENCRYPTION_KEY_ID: "test",
       EMAIL_DRIVER: "console",
       CORS_ORIGINS: "http://localhost:5173",
       FRONTEND_URL: "http://localhost:5173",
