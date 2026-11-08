@@ -8,6 +8,9 @@ import type { User } from "@/lib/api/types";
  */
 export type AuthStatus = "booting" | "authenticated" | "guest";
 
+/** Why an active session ended; "expired" covers revoked sessions and failed refreshes. */
+export type EndReason = "logout" | "expired";
+
 interface AuthState {
   status: AuthStatus;
   user: User | null;
@@ -15,10 +18,12 @@ interface AuthState {
   accessToken: string | null;
   /** Epoch ms when the access token expires. */
   expiresAt: number | null;
+  /** Set when a signed-in session ends, so the UI can explain it. */
+  endedReason: EndReason | null;
 
   setSession: (s: { accessToken: string; expiresIn: number; user?: User }) => void;
   setUser: (user: User) => void;
-  clear: () => void;
+  clear: (reason?: EndReason) => void;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
@@ -26,6 +31,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
   accessToken: null,
   expiresAt: null,
+  endedReason: null,
 
   setSession: ({ accessToken, expiresIn, user }) =>
     set((s) => {
@@ -34,12 +40,21 @@ export const useAuthStore = create<AuthState>()((set) => ({
         accessToken,
         expiresAt: Date.now() + expiresIn * 1000,
         user: nextUser,
+        endedReason: null,
         // without a user yet (refresh during boot) we stay in "booting" until /me resolves
         status: nextUser ? "authenticated" : s.status,
       };
     }),
 
-  setUser: (user) => set({ user, status: "authenticated" }),
+  setUser: (user) => set({ user, status: "authenticated", endedReason: null }),
 
-  clear: () => set({ status: "guest", user: null, accessToken: null, expiresAt: null }),
+  clear: (reason) =>
+    set((s) => ({
+      status: "guest",
+      user: null,
+      accessToken: null,
+      expiresAt: null,
+      // only a session that was actually active can "end"; failing to restore on boot is just a guest
+      endedReason: s.status === "authenticated" ? (reason ?? "logout") : null,
+    })),
 }));

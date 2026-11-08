@@ -1,13 +1,14 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MotionConfig } from "motion/react";
-import { useEffect, useState } from "react";
-import { Toaster } from "sonner";
+import { Suspense, useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
 import { authApi } from "@/lib/api/auth";
 import { ApiError, refreshSession } from "@/lib/api/client";
 import { onAuthBroadcast } from "@/lib/auth-channel";
+import { RouteTracker } from "@/components/route-tracker";
 import { useAuthStore } from "@/stores/auth-store";
 
 function makeQueryClient() {
@@ -32,11 +33,11 @@ async function restoreSession() {
   const { clear, setUser } = useAuthStore.getState();
   try {
     const token = await refreshSession();
-    if (!token) return clear();
+    if (!token) return clear("expired");
     const { user } = await authApi.me();
     setUser(user);
   } catch {
-    clear();
+    clear("expired");
   }
 }
 
@@ -63,11 +64,25 @@ function AuthBootstrap() {
   useEffect(
     () =>
       onAuthBroadcast((event) => {
-        if (event === "logout") useAuthStore.getState().clear();
+        if (event === "logout") useAuthStore.getState().clear("logout");
         else if (useAuthStore.getState().status !== "authenticated") void restoreSession();
       }),
     [],
   );
+
+  // when a session ends, drop cached private data; explain it when it wasn't the user's choice
+  const qc = useQueryClient();
+  const endedReason = useAuthStore((s) => s.endedReason);
+  useEffect(() => {
+    if (!endedReason) return;
+    qc.clear();
+    if (endedReason === "expired") {
+      toast("You were signed out", {
+        id: "session-ended",
+        description: "Your session ended or was signed out from another device. Please sign in again.",
+      });
+    }
+  }, [endedReason, qc]);
 
   return null;
 }
@@ -79,6 +94,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">
         <AuthBootstrap />
+        {/* reads the URL; on dynamic routes that must sit behind Suspense */}
+        <Suspense fallback={null}>
+          <RouteTracker />
+        </Suspense>
         {children}
         <Toaster
           theme="light"

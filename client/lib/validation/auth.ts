@@ -45,6 +45,28 @@ export const resetSchema = z
     error: "Passwords don't match",
   });
 
+export const profileSchema = z.object({
+  fullName: z.string().trim().min(1, { error: "Name is required" }).max(120),
+  phone: z
+    .string()
+    .trim()
+    .refine((v) => v === "" || /^\+?[0-9 ()-]{7,20}$/.test(v), { error: "Enter a valid phone number" }),
+});
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, { error: "Enter your current password" }).max(PASSWORD_MAX),
+    newPassword,
+    confirmPassword: z.string(),
+  })
+  .refine((v) => v.newPassword === v.confirmPassword, { path: ["confirmPassword"], error: "Passwords don't match" })
+  .refine((v) => v.newPassword !== v.currentPassword, {
+    path: ["newPassword"],
+    error: "Choose a password different from your current one",
+  });
+
+export type ProfileValues = z.infer<typeof profileSchema>;
+export type ChangePasswordValues = z.infer<typeof changePasswordSchema>;
 export type LoginValues = z.infer<typeof loginSchema>;
 export type RegisterValues = z.infer<typeof registerSchema>;
 export type ForgotValues = z.infer<typeof forgotSchema>;

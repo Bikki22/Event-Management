@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
+  PutBucketCorsCommand,
   PutBucketPolicyCommand,
   PutObjectCommand,
   S3Client,
@@ -140,6 +141,24 @@ export async function ensureBucket(): Promise<void> {
           },
         ],
       }),
+    }),
+  );
+  // Browsers upload straight to storage (signed POST form) and download ticket PDFs from signed
+  // links, so the frontend origins must be allowed, or the upload is blocked by CORS.
+  await s3.send(
+    new PutBucketCorsCommand({
+      Bucket,
+      CORSConfiguration: {
+        CORSRules: [
+          {
+            AllowedOrigins: env.CORS_ORIGINS,
+            AllowedMethods: ["GET", "HEAD", "POST"],
+            AllowedHeaders: ["*"],
+            ExposeHeaders: ["ETag"],
+            MaxAgeSeconds: 3600,
+          },
+        ],
+      },
     }),
   );
 }

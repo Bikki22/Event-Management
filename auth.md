@@ -295,6 +295,256 @@ Register → Get me → open Mailpit → Verify email → Get me (`emailVerified
 
 ---
 
+### 2.2 Creating organizer and admin accounts
+
+**Why `"role"` in register doesn't work:** `POST /auth/register` only accepts `email`, `password`, `fullName` and `phone`. Any other field, including `role`, is rejected with `400 VALIDATION_FAILED` (`Unrecognized key: "role"`). This is on purpose: otherwise anyone could sign up as an admin. **Every account starts as `attendee`**, and the role changes in one of two ways:
+
+| Role        | How you get it                                                                       |
+| ----------- | ------------------------------------------------------------------------------------ |
+| `attendee`  | Register (default)                                                                   |
+| `organizer` | Register → verify email → `POST /me/organizer-profile` (role changes automatically) |
+| `admin`     | Register → run `npm run user:make-admin -- <email>` in `server/` (no API, by design) |
+
+**Before you start:** API running (`npm run dev`), **worker running** (`npm run dev:worker`, it sends the verification emails), Mailpit open at `http://localhost:8025`.
+
+#### A. Create the admin account (do this first)
+
+**Step 1: register a normal account.** `POST http://localhost:4000/api/v1/auth/register`
+
+```json
+{
+  "email": "admin@gmail.com",
+  "password": "admin12345",
+  "fullName": "Site Admin",
+  "phone": "9800000001"
+}
+```
+
+Request body fields (the same for every account):
+
+| Field      | Required | Rules                                             | Example             |
+| ---------- | -------- | ------------------------------------------------- | ------------------- |
+| `email`    | yes      | valid email, max 254, must not already exist      | `"admin@gmail.com"` |
+| `password` | yes      | 8–128 characters                                  | `"admin12345"`      |
+| `fullName` | yes      | 1–120 characters                                  | `"Site Admin"`      |
+| `phone`    | no       | 7–20 chars: digits, spaces, `+ ( ) -`             | `"9800000001"`      |
+
+**Step 2: promote it.** In a terminal:
+
+```bash
+cd server
+npm run user:make-admin -- admin@gmail.com
+# → admin@gmail.com is now an admin.
+```
+
+**Step 3: check.** Log in again (`POST /auth/login` with the same email and password) and call `GET /me`. The response shows `"role": "admin"`. An existing access token picks up the new role within 60 s, but a fresh login is the simplest.
+
+Optional: verify the admin's email too (open the "Verify your email" message in Mailpit and copy the token into `POST /auth/verify-email`).
+
+#### B. Create an organizer account
+
+**Step 1: register.** `POST http://localhost:4000/api/v1/auth/register`
+
+```json
+{
+  "email": "organizer@gmail.com",
+  "password": "organizer123",
+  "fullName": "Event Organizer",
+  "phone": "9801234567"
+}
+```
+
+Copy the `accessToken` from the response. You use it as **Authorization → Bearer Token** for the next steps.
+
+**Step 2: verify the email (required).** Becoming an organizer needs a verified email, or you get `403 EMAIL_NOT_VERIFIED`. Open Mailpit (`http://localhost:8025`), open "Verify your email" for `organizer@gmail.com`, and copy the `token=…` value from the link. Then send `POST http://localhost:4000/api/v1/auth/verify-email`:
+
+```json
+{
+  "token": "PASTE_TOKEN_FROM_EMAIL_LINK"
+}
+```
+
+**Step 3: create the organizer profile.** `POST http://localhost:4000/api/v1/me/organizer-profile`, with the organizer's Bearer token:
+
+```json
+{
+  "orgName": "Kathmandu Live Events",
+  "slug": "kathmandu-live",
+  "bio": "We organise concerts and comedy nights in Kathmandu.",
+  "website": "https://kathmandulive.com",
+  "logoUrl": "https://picsum.photos/seed/ktm-live/512"
+}
+```
+
+Request body fields:
+
+| Field          | Required | Rules                                                                                   | Example                          |
+| -------------- | -------- | --------------------------------------------------------------------------------------- | -------------------------------- |
+| `orgName`      | yes      | 2–100 characters                                                                         | `"Kathmandu Live Events"`        |
+| `slug`         | no       | 3+ chars, lowercase letters, numbers, single hyphens. Generated from `orgName` if omitted. Your public URL: `/organizers/{slug}` | `"kathmandu-live"` |
+| `bio`          | no       | max 2000 characters                                                                      | `"We organise concerts…"`        |
+| `website`      | no       | `http(s)://` URL, max 300                                                                | `"https://kathmandulive.com"`    |
+| `logoUrl`      | no       | **https** URL only, max 500                                                              | `"https://picsum.photos/512"`    |
+| `logoUploadId` | no       | id of an `organizer_logo` upload (see `upload.md`). Send `logoUrl` **or** this, not both | `"0196…-uuid"`                   |
+
+The smallest valid body is just `{ "orgName": "Kathmandu Live Events" }`.
+
+Response `201`: the profile with `"verificationStatus": "pending"`. **The user's role is now `organizer`**; no re-login needed. Check with `GET /me`.
+
+A **pending** organizer can already create venues, draft events and ticket types, but **cannot publish** (`403 ORGANIZER_NOT_VERIFIED`) until an admin verifies them.
+
+**Step 4: verify the organizer (as admin).** Log in as `admin@gmail.com` and use **the admin's** Bearer token.
+
+Find the organizer's `userId`: `GET http://localhost:4000/api/v1/admin/organizers?status=pending`, then copy `userId` from the list.
+
+Approve: `PATCH http://localhost:4000/api/v1/admin/organizers/PASTE_USER_ID/verification`
+
+```json
+{
+  "status": "verified"
+}
+```
+
+Or reject (a `note` is **required** when rejecting; the organizer gets it by email):
+
+```json
+{
+  "status": "rejected",
+  "note": "Please add a website or social media link so we can confirm your organization."
+}
+```
+
+| Field    | Required             | Rules                         |
+| -------- | -------------------- | ----------------------------- |
+| `status` | yes                  | `"verified"` or `"rejected"`  |
+| `note`   | only for `rejected`  | 1–500 characters              |
+
+Now `GET /me/organizer-profile` (organizer's token) shows `"verificationStatus": "verified"`, and the organizer can publish events (see `events.md`).
+
+**Step 5 (optional): payout details**, so ticket money can be paid out. `PUT http://localhost:4000/api/v1/me/organizer-profile/payout`, organizer's token, **one** of:
+
+```json
+{ "method": "esewa", "walletId": "9801234567", "accountName": "Kathmandu Live Events" }
+```
+
+```json
+{ "method": "khalti", "walletId": "9801234567", "accountName": "Kathmandu Live Events" }
+```
+
+```json
+{
+  "method": "bank",
+  "bankName": "Nabil Bank",
+  "branch": "Durbar Marg",
+  "accountName": "Kathmandu Live Events Pvt. Ltd.",
+  "accountNumber": "01234567890123"
+}
+```
+
+`walletId` must be a 10-digit Nepali mobile number starting with `96`, `97` or `98`. `branch` is optional.
+
+#### Common errors
+
+| You see                                     | Why / fix                                                                           |
+| ------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `400 VALIDATION_FAILED` `Unrecognized key: "role"` | Remove `role` from the register body; follow the steps above instead          |
+| `403 EMAIL_NOT_VERIFIED` on organizer-profile | Do step B2 first (and make sure the worker is running so the email arrives)        |
+| `409 ALREADY_ORGANIZER`                     | This account already has an organizer profile; `GET` / `PATCH /me/organizer-profile` instead |
+| `409 SLUG_TAKEN`                            | Pick another `slug`, or leave it out to get one generated                           |
+| `403 FORBIDDEN` on `/admin/...`             | You're using the organizer's token, not the admin's, or the admin hasn't logged in again since `make-admin` |
+| `No user with email …` from `make-admin`    | Register that email first                                                           |
+| `400 VALIDATION_FAILED` "Explain why the profile is rejected" | Add a `note` when `status` is `"rejected"`                         |
+
+---
+
+### 2.3 Verifying an email address
+
+Every new account starts with `emailVerified: false`. You can sign in and browse, but **booking tickets and becoming an organizer need a verified email** (otherwise `403 EMAIL_NOT_VERIFIED`).
+
+#### How it works
+
+```
+register (or "Resend email")
+  └─ API saves a one-time token and queues an email
+       └─ worker sends it  ──►  Mailpit (local) / Resend (prod)
+            └─ email link: http://localhost:3000/verify-email?token=…   (FRONTEND_URL + /verify-email)
+                 └─ frontend page calls POST /auth/verify-email { token }  ──►  emailVerified: true
+```
+
+- The token works **once** and expires after **24 hours** (`EMAIL_VERIFY_TTL_HOURS`).
+- Asking for a new email cancels the older links; only the newest one works.
+
+#### Before you start (local)
+
+The email is sent by the **worker**, not the API. If the worker isn't running, nothing arrives.
+
+```bash
+cd server
+docker compose up -d mailpit     # local inbox
+npm run dev                      # API  (port 4000)
+npm run dev:worker               # sends the emails  ← easy to forget
+```
+
+Open **Mailpit** at `http://localhost:8025`. Every email the app sends locally lands there, whatever the address (nothing goes to real inboxes).
+
+#### Option A: in the app (easiest)
+
+1. Register at `http://localhost:3000/register` (or use an existing unverified account).
+2. Open Mailpit (`http://localhost:8025`) → open **"Verify your email"** for that address.
+3. Click **Verify email** in the message. It opens `http://localhost:3000/verify-email?token=…`, which verifies the account automatically and shows **"Email verified"**.
+4. Done. The yellow/black "Verify your email" banner disappears, and you can book tickets.
+
+No email? While signed in, click **Resend email** in the banner at the top of the site (or on the checkout page), then check Mailpit again.
+
+#### Option B: with Postman
+
+1. **Get the token.** Open the email in Mailpit and copy the part after `token=` in the button's link, e.g.
+   `http://localhost:3000/verify-email?token=cb6xn6ThRiKxCGhFNUTkf5b7s0Hb4VWJkMTYpEG1L1I` → the token is `cb6xn6ThRiKxCGhFNUTkf5b7s0Hb4VWJkMTYpEG1L1I`.
+2. **Verify.** `POST http://localhost:4000/api/v1/auth/verify-email` (no Bearer token needed). Body:
+   ```json
+   { "token": "cb6xn6ThRiKxCGhFNUTkf5b7s0Hb4VWJkMTYpEG1L1I" }
+   ```
+   Response `200`:
+   ```json
+   { "user": { "email": "user@gmail.com", "emailVerified": true, "…": "…" } }
+   ```
+3. **Check.** `GET http://localhost:4000/api/v1/me` with the user's Bearer token → `"emailVerified": true`.
+
+**Send a new link** (logged in, Bearer token, no body): `POST http://localhost:4000/api/v1/auth/resend-verification` → `202`. Limited to 3 per hour per user.
+
+#### Option C: find the link without opening Mailpit (terminal)
+
+Mailpit has an API, so you can pull the latest link for an address straight from the terminal:
+
+```bash
+EMAIL=user@gmail.com
+ID=$(curl -s "http://localhost:8025/api/v1/search?query=to:$EMAIL" | grep -o '"ID":"[^"]*"' | head -1 | cut -d'"' -f4)
+curl -s "http://localhost:8025/api/v1/message/$ID" | grep -o 'http://localhost:3000/verify-email?token=[A-Za-z0-9_-]*' | head -1
+```
+
+Open the printed link in the browser (Option A step 3), or paste its token into Postman (Option B).
+
+#### Other ways an email becomes verified
+
+- **Resetting the password** through the emailed reset link also marks the email verified (the user proved they own the inbox).
+- There's no admin "verify" button and no CLI for it on purpose.
+
+#### Troubleshooting
+
+| What you see | Why / fix |
+| ------------ | --------- |
+| No email in Mailpit | The worker isn't running: start `npm run dev:worker`. Emails queued while it was off are sent when it starts (outbox relay). |
+| Link opens `localhost:5173` or a wrong port | `FRONTEND_URL` in `server/.env` is wrong. It must be `http://localhost:3000`; restart the API after changing it, then **resend** (old emails keep the old link). |
+| "We couldn't verify that link" / `400 INVALID_OR_EXPIRED_TOKEN` | The link was already used, is older than 24 h, or a newer email replaced it. Click **Resend email** and use the newest message. |
+| `409 ALREADY_VERIFIED` on resend | Nothing to do, the account is already verified. |
+| `429 RATE_LIMITED` on resend | More than 3 resends in an hour. Wait, or use the newest email you already have. |
+| Verified, but checkout still says "verify your email" | The page cached the old user. Refresh the page (the session reloads `/me`). |
+| `403 EMAIL_NOT_VERIFIED` when booking or creating an organizer profile | Verify first, using any option above. |
+
+**In production** (`EMAIL_DRIVER=resend`), the same email goes to the user's real inbox through Resend. The link uses the production `FRONTEND_URL`, and the steps for the user are the same as Option A.
+
+---
+
 ## 3. Tokens
 
 ### 3.1 Access token (JWT)

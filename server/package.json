@@ -23,6 +23,7 @@
     "keys:generate": "tsx scripts/generate-keys.ts",
     "user:make-admin": "tsx --env-file=.env scripts/make-admin.ts",
     "db:seed": "tsx --env-file=.env scripts/seed-categories.ts",
+    "db:seed:demo": "tsx --env-file=.env scripts/seed-demo.ts",
     "storage:init": "tsx --env-file=.env scripts/storage-init.ts",
     "postinstall": "prisma generate",
     "format": "prettier --write .",

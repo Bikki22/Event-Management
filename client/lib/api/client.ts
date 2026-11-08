@@ -1,10 +1,9 @@
 import { useAuthStore } from "@/stores/auth-store";
 import type { FieldError, Problem, RefreshResponse } from "./types";
 
-export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1").replace(
-  /\/$/,
-  "",
-);
+import { API_URL } from "./config";
+
+export { API_URL };
 
 export class ApiError extends Error {
   readonly status: number;
@@ -12,12 +11,14 @@ export class ApiError extends Error {
   readonly errors: FieldError[];
   readonly retryAfter?: number;
   readonly requestId?: string;
+  /** extra data from the problem body, e.g. { ticketTypeId, available } for TICKET_SOLD_OUT */
+  readonly details?: unknown;
 
   constructor(
     status: number,
     code: string,
     message: string,
-    extra: { errors?: FieldError[]; retryAfter?: number; requestId?: string } = {},
+    extra: { errors?: FieldError[]; retryAfter?: number; requestId?: string; details?: unknown } = {},
   ) {
     super(message);
     this.name = "ApiError";
@@ -26,6 +27,7 @@ export class ApiError extends Error {
     this.errors = extra.errors ?? [];
     this.retryAfter = extra.retryAfter;
     this.requestId = extra.requestId;
+    this.details = extra.details;
   }
 }
 
@@ -77,6 +79,7 @@ async function parse<T>(res: Response): Promise<T> {
       errors: p.errors,
       retryAfter: Number.isFinite(retry) && retry > 0 ? retry : undefined,
       requestId: p.requestId,
+      details: p.details,
     });
   }
   return data as T;
@@ -116,7 +119,7 @@ export function refreshSession(): Promise<string | null> {
   inflight ??= doRefresh()
     .catch((err) => {
       if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
-        useAuthStore.getState().clear();
+        useAuthStore.getState().clear("expired");
         return null;
       }
       throw err;
@@ -129,7 +132,8 @@ export function refreshSession(): Promise<string | null> {
 
 // ───────────── main request helper ─────────────
 
-export async function api<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
+/** Sends with the bearer token; on 401 refreshes once and retries. */
+async function request(path: string, opts: RequestOptions): Promise<Response> {
   const useAuth = opts.auth ?? true;
   const token = useAuth ? useAuthStore.getState().accessToken : null;
 
@@ -137,9 +141,40 @@ export async function api<T = unknown>(path: string, opts: RequestOptions = {}):
 
   if (res.status === 401 && useAuth && token) {
     const fresh = await refreshSession().catch(() => null);
-    if (fresh) return parse<T>(await send(path, opts, fresh));
+    if (fresh) return send(path, opts, fresh);
   }
-  return parse<T>(res);
+  return res;
+}
+
+export async function api<T = unknown>(path: string, opts: RequestOptions = {}): Promise<T> {
+  return parse<T>(await request(path, opts));
+}
+
+/** Like `api()`, but also returns the `ETag` (needed for `If-Match` when editing events). */
+export async function apiWithMeta<T = unknown>(
+  path: string,
+  opts: RequestOptions = {},
+): Promise<{ data: T; etag: string | null }> {
+  const res = await request(path, opts);
+  const etag = res.headers.get("etag");
+  return { data: await parse<T>(res), etag };
+}
+
+/** Authenticated file download (e.g. ticket PDFs), which a plain `<a href>` can't do. */
+export async function apiBlob(path: string, opts: RequestOptions = {}): Promise<Blob> {
+  const res = await request(path, { ...opts, headers: { Accept: "*/*", ...opts.headers } });
+  if (!res.ok) await parse(res); // throws ApiError
+  return res.blob();
+}
+
+/** Builds a query string, skipping empty values: `qs({ q: "", city: "KTM" })` → `?city=KTM`. */
+export function qs(params: Record<string, string | number | boolean | null | undefined>): string {
+  const search = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (v !== undefined && v !== null && v !== "") search.set(k, String(v));
+  }
+  const s = search.toString();
+  return s ? `?${s}` : "";
 }
 
 /** Human-friendly message for any error thrown by `api()`. */

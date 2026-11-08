@@ -36,4 +36,5 @@ export interface Problem {
   instance?: string;
   requestId?: string;
   errors?: FieldError[];
+  details?: unknown;
 }
