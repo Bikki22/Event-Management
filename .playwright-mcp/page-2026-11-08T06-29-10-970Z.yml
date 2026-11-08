@@ -1,0 +1,24 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e15]:
+    - banner [ref=f9e16]:
+      - link "Back to events" [ref=f9e17] [cursor=pointer]:
+        - /url: /check-in
+      - generic [ref=f9e20]:
+        - paragraph [ref=f9e21]: Deep House on the Roof
+        - paragraph [ref=f9e22]: Door check-in
+      - generic [ref=f9e23]:
+        - paragraph [ref=f9e24]:
+          - text: "0"
+          - generic [ref=f9e25]: /3
+        - paragraph [ref=f9e26]: in
+    - button "Turn camera off" [ref=f9e35]
+    - generic [ref=f9e41]:
+      - generic [ref=f9e42]: Type a code instead
+      - generic [ref=f9e45]:
+        - textbox "Type a code instead" [ref=f9e46]:
+          - /placeholder: TKT-XXXXXXXXXXXXXXXX
+        - button "Check in" [disabled] [ref=f9e47]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f9e98] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f9e11] [cursor=pointer]
+  - alert [ref=f9e147]

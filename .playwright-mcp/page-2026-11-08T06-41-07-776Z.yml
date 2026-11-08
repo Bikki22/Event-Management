@@ -1,0 +1,154 @@
+- generic [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - generic [ref=f5e5]:
+          - link "Book Event home" [ref=f5e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f5e13]: Book Event
+          - generic [ref=f5e14]: Admin
+        - navigation "Admin" [ref=f5e15]:
+          - link "Overview" [ref=f5e16] [cursor=pointer]:
+            - /url: /admin
+          - link "Organizers" [ref=f5e22] [cursor=pointer]:
+            - /url: /admin/organizers
+          - link "Users" [ref=f5e26] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Categories" [ref=f5e32] [cursor=pointer]:
+            - /url: /admin/categories
+          - link "Payments" [ref=f5e37] [cursor=pointer]:
+            - /url: /admin/payments
+          - link "Refunds" [ref=f5e40] [cursor=pointer]:
+            - /url: /admin/refunds
+          - link "Audit log" [ref=f5e44] [cursor=pointer]:
+            - /url: /admin/audit-log
+        - generic [ref=f5e48]:
+          - link "Back to Book Event" [ref=f5e49] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f5e68]:
+            - generic [aria-hidden] [ref=f5e69]: SA
+            - generic [ref=f5e70]:
+              - paragraph [ref=f5e71]: Site Admin
+              - paragraph [ref=f5e72]: admin@gmail.com
+            - button "Sign out" [ref=f5e73]
+    - main [ref=f5e54]:
+      - generic [ref=f5e55]:
+        - generic [ref=f5e78]:
+          - paragraph [ref=f5e79]: Admin
+          - heading "Audit log" [level=1] [ref=f5e80]
+          - paragraph [ref=f5e81]: "Every write on the platform: who did what, when, from where, and what changed. Append-only."
+        - generic [ref=f5e82]:
+          - button "Everything" [ref=f5e83]
+          - button "Admin actions" [pressed] [ref=f5e84]
+          - button "Organizers" [ref=f5e85]
+          - button "Events" [ref=f5e86]
+          - button "Ticket types" [ref=f5e87]
+          - button "Promo codes" [ref=f5e88]
+          - button "Bookings" [ref=f5e89]
+          - button "Sign-in & passwords" [ref=f5e90]
+          - button "Venues" [ref=f5e91]
+        - generic [ref=f5e92]:
+          - searchbox "Filter by action" [ref=f5e94]
+          - searchbox "Filter by entity id" [ref=f5e96]
+          - generic [ref=f5e97]:
+            - text: From
+            - textbox "From" [ref=f5e98]
+          - generic [ref=f5e99]:
+            - text: To
+            - textbox "To" [ref=f5e100]
+        - list [ref=f5e101]:
+          - listitem [ref=f5e102]:
+            - group [ref=f5e103]:
+              - generic "admin.refund_completed Site Admin refund …c76a8bef Nov 8, 2026, 12:25:52 PM · Localhost" [ref=f5e104] [cursor=pointer]:
+                - generic [ref=f5e107]:
+                  - generic [ref=f5e108]: admin.refund_completed
+                  - generic [ref=f5e109]: Site Admin
+                  - generic [ref=f5e110]: refund …c76a8bef
+                  - generic [ref=f5e111]: Nov 8, 2026, 12:25:52 PM · Localhost
+          - listitem [ref=f5e112]:
+            - group [ref=f5e113]:
+              - generic "admin.category_deleted Site Admin category …696231a9 Nov 8, 2026, 12:25:16 PM · Localhost" [ref=f5e114] [cursor=pointer]:
+                - generic [ref=f5e117]:
+                  - generic [ref=f5e118]: admin.category_deleted
+                  - generic [ref=f5e119]: Site Admin
+                  - generic [ref=f5e120]: category …696231a9
+                  - generic [ref=f5e121]: Nov 8, 2026, 12:25:16 PM · Localhost
+          - listitem [ref=f5e122]:
+            - group [ref=f5e123]:
+              - generic "admin.category_deleted Site Admin category …dbb0d65a Nov 8, 2026, 12:25:15 PM · Localhost" [ref=f5e124] [cursor=pointer]:
+                - generic [ref=f5e127]:
+                  - generic [ref=f5e128]: admin.category_deleted
+                  - generic [ref=f5e129]: Site Admin
+                  - generic [ref=f5e130]: category …dbb0d65a
+                  - generic [ref=f5e131]: Nov 8, 2026, 12:25:15 PM · Localhost
+          - listitem [ref=f5e132]:
+            - group [ref=f5e133]:
+              - generic "admin.category_updated Site Admin category …dbb0d65a Nov 8, 2026, 12:25:13 PM · Localhost" [ref=f5e134] [cursor=pointer]:
+                - generic [ref=f5e137]:
+                  - generic [ref=f5e138]: admin.category_updated
+                  - generic [ref=f5e139]: Site Admin
+                  - generic [ref=f5e140]: category …dbb0d65a
+                  - generic [ref=f5e141]: Nov 8, 2026, 12:25:13 PM · Localhost
+          - listitem [ref=f5e142]:
+            - group [ref=f5e143]:
+              - generic "admin.category_created Site Admin category …dbb0d65a Nov 8, 2026, 12:25:01 PM · Localhost" [ref=f5e144] [cursor=pointer]:
+                - generic [ref=f5e147]:
+                  - generic [ref=f5e148]: admin.category_created
+                  - generic [ref=f5e149]: Site Admin
+                  - generic [ref=f5e150]: category …dbb0d65a
+                  - generic [ref=f5e151]: Nov 8, 2026, 12:25:01 PM · Localhost
+          - listitem [ref=f5e152]:
+            - group [ref=f5e153]:
+              - generic "admin.category_created Site Admin category …696231a9 Nov 8, 2026, 12:24:51 PM · Localhost" [ref=f5e154] [cursor=pointer]:
+                - generic [ref=f5e157]:
+                  - generic [ref=f5e158]: admin.category_created
+                  - generic [ref=f5e159]: Site Admin
+                  - generic [ref=f5e160]: category …696231a9
+                  - generic [ref=f5e161]: Nov 8, 2026, 12:24:51 PM · Localhost
+          - listitem [ref=f5e162]:
+            - group [ref=f5e163]:
+              - generic "admin.user_updated Site Admin user …d97594c8 Nov 8, 2026, 12:24:40 PM · Localhost" [active] [ref=f5e164] [cursor=pointer]:
+                - generic [ref=f5e167]:
+                  - generic [ref=f5e168]: admin.user_updated
+                  - generic [ref=f5e169]: Site Admin
+                  - generic [ref=f5e170]: user …d97594c8
+                  - generic [ref=f5e171]: Nov 8, 2026, 12:24:40 PM · Localhost
+              - generic [ref=f5e640]:
+                - paragraph [ref=f5e641]: "id: 01a1b262-593a-779b-ad92-fc43d97594c8"
+                - generic [ref=f5e642]: "{ \"after\": { \"role\": \"organizer\", \"status\": \"active\" }, \"before\": { \"role\": \"organizer\", \"status\": \"suspended\" }, \"sessionsRevoked\": 0 }"
+          - listitem [ref=f5e172]:
+            - group [ref=f5e173]:
+              - generic "admin.user_updated Site Admin user …d97594c8 Nov 8, 2026, 12:24:37 PM · Localhost" [ref=f5e174] [cursor=pointer]:
+                - generic [ref=f5e177]:
+                  - generic [ref=f5e178]: admin.user_updated
+                  - generic [ref=f5e179]: Site Admin
+                  - generic [ref=f5e180]: user …d97594c8
+                  - generic [ref=f5e181]: Nov 8, 2026, 12:24:37 PM · Localhost
+          - listitem [ref=f5e182]:
+            - group [ref=f5e183]:
+              - generic "admin.organizer_verified Site Admin organizer_profile …d97594c8 Nov 8, 2026, 12:24:12 PM · Localhost" [ref=f5e184] [cursor=pointer]:
+                - generic [ref=f5e187]:
+                  - generic [ref=f5e188]: admin.organizer_verified
+                  - generic [ref=f5e189]: Site Admin
+                  - generic [ref=f5e190]: organizer_profile …d97594c8
+                  - generic [ref=f5e191]: Nov 8, 2026, 12:24:12 PM · Localhost
+          - listitem [ref=f5e388]:
+            - group [ref=f5e389]:
+              - generic "admin.user_promoted_cli System user …2776650f Nov 7, 2026, 3:34:55 AM" [ref=f5e390] [cursor=pointer]:
+                - generic [ref=f5e393]:
+                  - generic [ref=f5e394]: admin.user_promoted_cli
+                  - generic [ref=f5e395]: System
+                  - generic [ref=f5e396]: user …2776650f
+                  - generic [ref=f5e397]: Nov 7, 2026, 3:34:55 AM
+          - listitem [ref=f5e398]:
+            - group [ref=f5e399]:
+              - generic "admin.user_promoted_cli System user …a4f4ecb7 Nov 7, 2026, 2:27:31 AM" [ref=f5e400] [cursor=pointer]:
+                - generic [ref=f5e403]:
+                  - generic [ref=f5e404]: admin.user_promoted_cli
+                  - generic [ref=f5e405]: System
+                  - generic [ref=f5e406]: user …a4f4ecb7
+                  - generic [ref=f5e407]: Nov 7, 2026, 2:27:31 AM
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f5e590] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f5e64] [cursor=pointer]
+  - alert [ref=f5e639]

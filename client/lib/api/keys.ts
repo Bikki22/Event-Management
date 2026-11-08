@@ -10,7 +10,7 @@ export const keys = {
     sessions: () => [...keys.me.all, "sessions"] as const,
     bookings: (filter: Record<string, unknown> = {}) => [...keys.me.all, "bookings", filter] as const,
     tickets: (filter: Record<string, unknown> = {}) => [...keys.me.all, "tickets", filter] as const,
-    events: () => [...keys.me.all, "events"] as const,
+    events: (filter: Record<string, unknown> = {}) => [...keys.me.all, "events", filter] as const,
     organizerProfile: () => [...keys.me.all, "organizer-profile"] as const,
   },
   categories: {
@@ -31,5 +31,16 @@ export const keys = {
   },
   organizers: {
     detail: (slug: string) => ["organizers", slug] as const,
+  },
+  /** Organizer dashboard: one event's manage view and everything under it. */
+  manage: {
+    all: ["manage"] as const,
+    event: (id: string) => [...keys.manage.all, "event", id] as const,
+    venues: (filter: Record<string, unknown>) => [...keys.manage.all, "venues", filter] as const,
+    promoCodes: (id: string) => [...keys.manage.all, "event", id, "promo-codes"] as const,
+    attendees: (id: string, filter: Record<string, unknown> = {}) =>
+      [...keys.manage.all, "event", id, "attendees", filter] as const,
+    staff: (id: string) => [...keys.manage.all, "event", id, "staff"] as const,
+    checkIns: (id: string) => [...keys.manage.all, "event", id, "check-ins"] as const,
   },
 };

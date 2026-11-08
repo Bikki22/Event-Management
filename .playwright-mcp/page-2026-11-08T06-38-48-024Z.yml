@@ -1,0 +1,81 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - link "Book Event home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e13]: Book Event
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - heading "Welcome back" [level=1] [ref=e18]
+          - paragraph [ref=e19]: Sign in to see your tickets and bookings.
+        - generic [ref=e20]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: Email
+            - textbox "Email" [active] [ref=e26]:
+              - /placeholder: you@example.com
+          - generic [ref=e28]:
+            - generic [ref=e29]:
+              - generic [ref=e30]: Password
+              - link "Forgot?" [ref=e31] [cursor=pointer]:
+                - /url: /forgot-password
+            - generic [ref=e32]:
+              - textbox "Password" [ref=e33]
+              - button "Show password" [ref=e35]: Show
+          - button "Sign in" [ref=e37]
+        - paragraph [ref=e40]:
+          - text: New here?
+          - link "Create an account" [ref=e41] [cursor=pointer]:
+            - /url: /register?next=%2Fadmin
+      - generic [ref=e42]:
+        - generic [ref=e43]: Book Event — tickets for every night out
+        - generic [ref=e44]: Kathmandu, NP
+    - complementary [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: Now booking
+          - generic [ref=e50]: Winter 26 / 27
+        - heading "Good nights get booked early." [level=2] [ref=e51]: Good nightsget bookedearly.
+        - list [ref=e52]:
+          - listitem [ref=e53]:
+            - generic [ref=e54]:
+              - text: DEC 12
+              - generic [ref=e55]: SAT
+            - generic [ref=e56]:
+              - generic [ref=e57]: Neon Nights Festival
+              - generic [ref=e58]: Tundikhel, Kathmandu
+            - generic [ref=e59]: Music
+          - listitem [ref=e64]:
+            - generic [ref=e65]:
+              - text: DEC 19
+              - generic [ref=e66]: SAT
+            - generic [ref=e67]:
+              - generic [ref=e68]: Stand-up at the Square
+              - generic [ref=e69]: Patan Durbar Square
+            - generic [ref=e70]: Comedy
+          - listitem [ref=e75]:
+            - generic [ref=e76]:
+              - text: JAN 08
+              - generic [ref=e77]: FRI
+            - generic [ref=e78]:
+              - generic [ref=e79]: Indie Film Premiere
+              - generic [ref=e80]: QFX Labim Mall
+            - generic [ref=e81]: Film
+          - listitem [ref=e86]:
+            - generic [ref=e87]:
+              - text: JAN 23
+              - generic [ref=e88]: SAT
+            - generic [ref=e89]:
+              - generic [ref=e90]: Pokhara Street Food Fair
+              - generic [ref=e91]: Lakeside, Pokhara
+            - generic [ref=e92]: Food
+          - listitem [ref=e97]:
+            - generic [ref=e98]:
+              - text: FEB 22
+              - generic [ref=e99]: MON
+            - generic [ref=e100]:
+              - generic [ref=e101]: Himalayan Tech Summit
+              - generic [ref=e102]: Hyatt Regency
+            - generic [ref=e103]: Talks
+        - paragraph [ref=e108]: Concerts — Comedy — Film — Food — Talks
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]

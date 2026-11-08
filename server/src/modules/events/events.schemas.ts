@@ -2,8 +2,18 @@ import { z } from "zod";
 import { SLUG_PATTERN } from "../../lib/slug.js";
 
 export const EVENT_SLUG_MAX = 80;
-const TIMEZONES = new Set(Intl.supportedValuesOf("timeZone"));
-TIMEZONES.add("UTC");
+/**
+ * Any IANA zone or alias Intl accepts. Not `Intl.supportedValuesOf`: it lists only ICU's canonical
+ * names, so it rejected "Asia/Kathmandu" (it has "Asia/Katmandu") and "Asia/Kolkata".
+ */
+const isTimeZone = (tz: string) => {
+  try {
+    new Intl.DateTimeFormat("en", { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const dateTime = z.iso
   .datetime({ offset: true, error: "Use an ISO 8601 date-time, e.g. 2026-12-20T18:00:00+05:45" })
@@ -26,7 +36,7 @@ const fields = {
   mode: z.enum(["in_person", "online", "hybrid"]),
   onlineUrl: z.url({ protocol: /^https$/, error: "Online link must be an https URL" }).max(500),
   seatingType: z.enum(["general_admission", "reserved"]),
-  timezone: z.string().refine((tz) => TIMEZONES.has(tz), { error: "Unknown time zone" }),
+  timezone: z.string().max(64).refine(isTimeZone, { error: "Unknown time zone" }),
   visibility: z.enum(["public", "unlisted", "private"]),
   metadata: z
     .object({

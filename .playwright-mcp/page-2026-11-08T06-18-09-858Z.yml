@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e119]:
+    - complementary [ref=e120]:
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - link "Book Event home" [ref=e123] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e130]: Book Event
+          - generic [ref=e131]: Organizer
+        - navigation "Organizer" [ref=e132]:
+          - link "Overview" [ref=e133] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=e139] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=e142] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=e147] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=e151]:
+          - link "Back to Book Event" [ref=e152] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e156]:
+            - generic [aria-hidden] [ref=e157]: KL
+            - generic [ref=e158]:
+              - paragraph [ref=e159]: Kathmandu Live
+              - paragraph [ref=e160]: ktm-live@demo.bookevent.dev
+            - button "Sign out" [ref=e161]
+    - main [ref=e166]:
+      - generic [ref=e167]:
+        - link "All events" [ref=e168] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=e171]:
+          - generic [ref=e172]:
+            - generic [ref=e173]: Published
+            - heading "Phase 7 Publish Test" [level=1] [ref=e176]
+            - paragraph [ref=e177]: Tue, Dec 22 · 6:00 PM – 8:00 PM
+          - generic [ref=e178]:
+            - link "View page" [ref=e385] [cursor=pointer]:
+              - /url: /events/phase-7-publish-test
+            - button "More actions" [ref=e180]
+        - navigation [ref=e185]:
+          - link "Event" [ref=e186] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d
+          - link "Promo codes" [ref=e188] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/promo-codes
+          - link "Attendees" [ref=e189] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/attendees
+          - link "Door staff" [ref=e190] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/staff
+        - list [ref=e191]:
+          - listitem [ref=e192]:
+            - button "Basics" [ref=e193]
+          - listitem [ref=e198]:
+            - button "When & where" [ref=e199]
+          - listitem [ref=e204]:
+            - button "3 Cover image" [ref=e205]:
+              - generic [ref=e206]: "3"
+              - generic [ref=e207]: Cover image
+          - listitem [ref=e208]:
+            - button "Tickets" [ref=e209]
+          - listitem [ref=e214]:
+            - button "Review & publish" [ref=e390]
+        - generic [ref=e393]:
+          - generic [ref=e401]:
+            - paragraph [ref=e402]: Your event is live
+            - paragraph [ref=e403]: It's listed in search and on your organizer page. Edits you save show up within a minute.
+          - link "View event page" [ref=e404] [cursor=pointer]:
+            - /url: /events/phase-7-publish-test
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e409]:
+        - generic [ref=e413]: Your event is live
+      - listitem [ref=e280]:
+        - generic [ref=e284]: Welcome back, Kathmandu
+  - button "Open Tanstack query devtools" [ref=e336] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]
+  - alert [ref=e118]: Welcome back

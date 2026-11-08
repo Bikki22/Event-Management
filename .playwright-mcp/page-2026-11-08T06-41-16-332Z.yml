@@ -1,0 +1,31 @@
+- generic [active] [ref=f6e1]:
+  - generic [ref=f6e2]:
+    - complementary [ref=f6e3]:
+      - generic [ref=f6e4]:
+        - generic [ref=f6e5]:
+          - link "Book Event home" [ref=f6e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f6e13]: Book Event
+          - generic [ref=f6e14]: Admin
+        - navigation "Admin" [ref=f6e15]:
+          - link "Overview" [ref=f6e16] [cursor=pointer]:
+            - /url: /admin
+          - link "Organizers" [ref=f6e22] [cursor=pointer]:
+            - /url: /admin/organizers
+          - link "Users" [ref=f6e26] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Categories" [ref=f6e32] [cursor=pointer]:
+            - /url: /admin/categories
+          - link "Payments" [ref=f6e37] [cursor=pointer]:
+            - /url: /admin/payments
+          - link "Refunds" [ref=f6e40] [cursor=pointer]:
+            - /url: /admin/refunds
+          - link "Audit log" [ref=f6e44] [cursor=pointer]:
+            - /url: /admin/audit-log
+        - link "Back to Book Event" [ref=f6e49] [cursor=pointer]:
+          - /url: /
+    - main [ref=f6e54]:
+      - status "Loading" [ref=f6e57]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f6e64] [cursor=pointer]
+  - alert [ref=f6e68]

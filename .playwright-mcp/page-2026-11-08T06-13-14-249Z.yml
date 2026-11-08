@@ -1,0 +1,51 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e119]:
+    - complementary [ref=e120]:
+      - generic [ref=e121]:
+        - generic [ref=e122]:
+          - link "Book Event home" [ref=e123] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e130]: Book Event
+          - generic [ref=e131]: Organizer
+        - navigation "Organizer" [ref=e132]:
+          - link "Overview" [ref=e133] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=e139] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=e142] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=e147] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=e151]:
+          - link "Back to Book Event" [ref=e152] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e156]:
+            - generic [aria-hidden] [ref=e157]: CT
+            - generic [ref=e158]:
+              - paragraph [ref=e159]: Claude Tester
+              - paragraph [ref=e160]: claude.ui.test1@gmail.com
+            - button "Sign out" [ref=e161]
+    - main [ref=e166]:
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - paragraph [ref=e170]: Organizer
+            - heading "Events" [level=1] [ref=e171]
+            - paragraph [ref=e172]: Drafts, live events and past ones. Open an event to edit it, manage tickets, promo codes and attendees.
+          - link "New event" [ref=e173] [cursor=pointer]:
+            - /url: /dashboard/events/new
+        - tablist [ref=e176]:
+          - tab "All" [selected] [ref=e177]
+          - tab "Drafts" [ref=e179]
+          - tab "Published" [ref=e180]
+          - tab "Ended" [ref=e181]
+          - tab "Cancelled" [ref=e182]
+        - generic [ref=e183]:
+          - paragraph [ref=e187]: No events yet
+          - paragraph [ref=e188]: Create your first event. It stays a private draft until you publish it.
+          - link "Create an event" [ref=e190] [cursor=pointer]:
+            - /url: /dashboard/events/new
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=e241] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]
+  - alert [ref=e118]: Events · Book Event

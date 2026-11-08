@@ -1,0 +1,80 @@
+- generic [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - generic [ref=f5e5]:
+          - link "Book Event home" [ref=f5e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f5e13]: Book Event
+          - generic [ref=f5e14]: Organizer
+        - navigation "Organizer" [ref=f5e15]:
+          - link "Overview" [ref=f5e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f5e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f5e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f5e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f5e34]:
+          - link "Back to Book Event" [ref=f5e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f5e54]:
+            - generic [aria-hidden] [ref=f5e55]: KL
+            - generic [ref=f5e56]:
+              - paragraph [ref=f5e57]: Kathmandu Live
+              - paragraph [ref=f5e58]: ktm-live@demo.bookevent.dev
+            - button "Sign out" [ref=f5e59]
+    - main [ref=f5e40]:
+      - generic [ref=f5e41]:
+        - link "All events" [ref=f5e63] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f5e66]:
+          - generic [ref=f5e67]:
+            - generic [ref=f5e68]: Published
+            - heading "Jazz at the Courtyard" [level=1] [ref=f5e71]
+            - paragraph [ref=f5e72]: Tue, Nov 10 · 7:00 PM – 10:00 PM
+          - generic [ref=f5e73]:
+            - link "View page" [ref=f5e74] [cursor=pointer]:
+              - /url: /events/jazz-at-the-courtyard
+            - button "More actions" [ref=f5e80]
+        - navigation [ref=f5e85]:
+          - link "Event" [ref=f5e86] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4
+          - link "Promo codes" [ref=f5e87] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/promo-codes
+          - link "Attendees" [ref=f5e88] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/attendees
+          - link "Door staff" [ref=f5e89] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/staff
+        - generic [ref=f5e91]:
+          - generic [ref=f5e92]:
+            - generic [ref=f5e94]:
+              - heading "Add door staff" [level=2] [ref=f5e95]
+              - paragraph [ref=f5e96]: They need a Book Event account. Adding someone again changes their role.
+            - generic [ref=f5e98]:
+              - generic [ref=f5e99]:
+                - generic [ref=f5e100]:
+                  - generic [ref=f5e101]: Email
+                  - textbox "Email" [active] [invalid] [ref=f5e104]:
+                    - /placeholder: volunteer@example.com
+                    - text: nobody-here@example.com
+                  - alert [ref=f5e227]: No account with this email. Ask them to sign up first.
+                - generic [ref=f5e105]:
+                  - generic [ref=f5e106]: Role
+                  - combobox "Role" [ref=f5e109]:
+                    - option "Scanner" [selected]
+                    - option "Manager"
+                - button "Add" [ref=f5e110]
+              - paragraph [ref=f5e111]: Scans tickets at the door. Can't see the attendee list.
+          - generic [ref=f5e112]:
+            - generic [ref=f5e114]:
+              - heading "Team for this event" [level=2] [ref=f5e115]
+              - paragraph [ref=f5e116]: You can always scan tickets yourself; you don't need to add yourself.
+            - generic [ref=f5e118]:
+              - paragraph [ref=f5e125]: No door staff yet
+              - paragraph [ref=f5e126]: Add the people who'll scan tickets at the entrance.
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f5e177] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f5e50] [cursor=pointer]
+  - alert [ref=f5e226]

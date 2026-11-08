@@ -1,0 +1,99 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - generic [ref=f2e5]:
+          - link "Book Event home" [ref=f2e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f2e13]: Book Event
+          - generic [ref=f2e14]: Organizer
+        - navigation "Organizer" [ref=f2e15]:
+          - link "Overview" [ref=f2e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f2e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f2e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f2e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f2e34]:
+          - link "Back to Book Event" [ref=f2e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f2e54]:
+            - generic [aria-hidden] [ref=f2e55]: KL
+            - generic [ref=f2e56]:
+              - paragraph [ref=f2e57]: Kathmandu Live
+              - paragraph [ref=f2e58]: ktm-live@demo.bookevent.dev
+            - button "Sign out" [ref=f2e59]
+    - main [ref=f2e40]:
+      - generic [ref=f2e41]:
+        - link "All events" [ref=f2e63] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f2e66]:
+          - generic [ref=f2e67]:
+            - generic [ref=f2e68]: Published
+            - heading "Jazz at the Courtyard" [level=1] [ref=f2e71]
+            - paragraph [ref=f2e72]: Tue, Nov 10 · 7:00 PM – 10:00 PM
+          - generic [ref=f2e73]:
+            - link "View page" [ref=f2e74] [cursor=pointer]:
+              - /url: /events/jazz-at-the-courtyard
+            - button "More actions" [ref=f2e80]
+        - navigation [ref=f2e85]:
+          - link "Event" [ref=f2e86] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4
+          - link "Promo codes" [ref=f2e87] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/promo-codes
+          - link "Attendees" [ref=f2e88] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/attendees
+          - link "Door staff" [ref=f2e90] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b2b8-7f44-750d-bb0c-152e67dffdf4/staff
+        - generic [ref=f2e91]:
+          - generic [ref=f2e212]:
+            - paragraph [ref=f2e213]: 0 of 0 checked in
+            - generic [ref=f2e214]: 0%
+          - generic [ref=f2e93]:
+            - button "Preparing CSV…" [disabled] [ref=f2e216]
+            - paragraph [ref=f2e219]: Usually a few seconds. We'll email you too.
+        - generic [ref=f2e98]:
+          - tablist [ref=f2e99]:
+            - tab "All" [selected] [ref=f2e100]
+            - tab "Not checked in" [ref=f2e102]
+            - tab "Checked in" [ref=f2e103]
+            - tab "Refunded" [ref=f2e104]
+            - tab "Cancelled" [ref=f2e105]
+          - searchbox "Search attendees" [ref=f2e107]
+        - table [ref=f2e221]:
+          - rowgroup [ref=f2e222]:
+            - row [ref=f2e223]:
+              - columnheader "Attendee" [ref=f2e224]
+              - columnheader "Ticket" [ref=f2e225]
+              - columnheader "Booking" [ref=f2e226]
+              - columnheader "Check-in" [ref=f2e227]
+          - rowgroup [ref=f2e228]:
+            - row [ref=f2e229]:
+              - cell [ref=f2e230]:
+                - paragraph [ref=f2e231]: Claude Tester
+                - paragraph [ref=f2e232]: claude.ui.test1@gmail.com
+              - cell [ref=f2e233]:
+                - paragraph [ref=f2e234]: Entry
+                - paragraph [ref=f2e235]: TKT-SYPN9FDV8YX8ZHDV
+              - cell [ref=f2e236]:
+                - paragraph [ref=f2e237]: EVT-WKNMCPX6
+                - paragraph [ref=f2e238]: NPR 1,200
+              - cell "Refunded" [ref=f2e239]
+            - row [ref=f2e241]:
+              - cell [ref=f2e242]:
+                - paragraph [ref=f2e243]: Sita Karki
+                - paragraph [ref=f2e244]: sita@example.com
+                - paragraph [ref=f2e245]: Bought by Claude Tester
+              - cell [ref=f2e246]:
+                - paragraph [ref=f2e247]: Entry
+                - paragraph [ref=f2e248]: TKT-BERM9GMZ59P0BYGC
+              - cell [ref=f2e249]:
+                - paragraph [ref=f2e250]: EVT-WKNMCPX6
+                - paragraph [ref=f2e251]: NPR 1,200
+              - cell "Refunded" [ref=f2e252]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f2e161] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f2e50] [cursor=pointer]
+  - alert [ref=f2e210]

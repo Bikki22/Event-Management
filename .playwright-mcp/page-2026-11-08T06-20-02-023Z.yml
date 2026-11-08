@@ -1,0 +1,24 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]:
+    - complementary [ref=f4e3]:
+      - generic [ref=f4e4]:
+        - generic [ref=f4e5]:
+          - link "Book Event home" [ref=f4e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f4e13]: Book Event
+          - generic [ref=f4e14]: Organizer
+        - navigation "Organizer" [ref=f4e15]:
+          - link "Overview" [ref=f4e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f4e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f4e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f4e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - link "Back to Book Event" [ref=f4e35] [cursor=pointer]:
+          - /url: /
+    - main [ref=f4e40]:
+      - status "Loading" [ref=f4e43]
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=f4e50] [cursor=pointer]

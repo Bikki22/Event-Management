@@ -1,0 +1,32 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - complementary [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]:
+          - link "Book Event home" [ref=f3e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f3e13]: Book Event
+          - generic [ref=f3e14]: Admin
+        - navigation "Admin" [ref=f3e15]:
+          - link "Overview" [ref=f3e16] [cursor=pointer]:
+            - /url: /admin
+          - link "Organizers" [ref=f3e22] [cursor=pointer]:
+            - /url: /admin/organizers
+          - link "Users" [ref=f3e26] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Categories" [ref=f3e32] [cursor=pointer]:
+            - /url: /admin/categories
+          - link "Payments" [ref=f3e37] [cursor=pointer]:
+            - /url: /admin/payments
+          - link "Refunds" [ref=f3e40] [cursor=pointer]:
+            - /url: /admin/refunds
+          - link "Audit log" [ref=f3e44] [cursor=pointer]:
+            - /url: /admin/audit-log
+        - link "Back to Book Event" [ref=f3e49] [cursor=pointer]:
+          - /url: /
+    - main [ref=f3e54]:
+      - status "Loading" [ref=f3e57]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f3e109] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f3e163] [cursor=pointer]
+  - alert [ref=f3e167]

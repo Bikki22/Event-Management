@@ -1,0 +1,156 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "Book Event home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e13]: Book Event
+          - generic [ref=e14]: Organizer
+        - navigation "Organizer" [ref=e15]:
+          - link "Overview" [ref=e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=e34]:
+          - link "Back to Book Event" [ref=e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e55]:
+            - generic [aria-hidden] [ref=e56]: CT
+            - generic [ref=e57]:
+              - paragraph [ref=e58]: Claude Tester
+              - paragraph [ref=e59]: claude.ui.test1@gmail.com
+            - button "Sign out" [ref=e60]
+    - main [ref=e40]:
+      - generic [ref=e41]:
+        - link "All events" [ref=e64] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: Draft
+            - heading "Phase 7 Test Jazz Night" [level=1] [ref=e72]
+            - paragraph [ref=e73]: Sun, Dec 20 · 6:00 PM – 10:00 PM
+          - button "More actions" [ref=e76]
+        - navigation [ref=e81]:
+          - link "Event" [ref=e82] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3
+          - link "Promo codes" [ref=e84] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/promo-codes
+          - link "Attendees" [ref=e85] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/attendees
+          - link "Door staff" [ref=e86] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/staff
+        - list [ref=e87]:
+          - listitem [ref=e88]:
+            - button "Basics" [ref=e89]
+          - listitem [ref=e94]:
+            - button "When & where" [ref=e95]
+          - listitem [ref=e100]:
+            - button "3 Cover image" [ref=e101]:
+              - generic [ref=e102]: "3"
+              - generic [ref=e103]: Cover image
+          - listitem [ref=e104]:
+            - button "Tickets" [ref=e105]
+          - listitem [ref=e110]:
+            - button "5 Review & publish" [ref=e111]:
+              - generic [ref=e112]: "5"
+              - generic [ref=e113]: Review & publish
+        - generic [ref=e115]:
+          - group [ref=e116]:
+            - generic [ref=e117]:
+              - heading "Basics" [level=2] [ref=e118]
+              - paragraph [ref=e119]: What the event is. You can change all of this later.
+              - generic [ref=e120]:
+                - generic [ref=e121]:
+                  - generic [ref=e122]: Event title
+                  - textbox "Event title" [ref=e125]:
+                    - /placeholder: Kathmandu Jazz Night
+                    - text: Phase 7 Test Jazz Night
+                - generic [ref=e126]:
+                  - generic [ref=e127]: Event address
+                  - textbox "Event address" [ref=e130]: phase-7-test-jazz-night
+                  - paragraph [ref=e132]: bookevent.com/events/…
+                - generic [ref=e133]:
+                  - generic [ref=e134]:
+                    - generic [ref=e135]: Summary
+                    - generic [ref=e136]: 41/300
+                  - textbox "Summary" [ref=e137]:
+                    - /placeholder: One or two sentences for event cards and link previews.
+                    - text: An evening of live jazz with local bands.
+                  - generic [ref=e138]: Required to publish.
+                - generic [ref=e139]:
+                  - generic [ref=e140]: Description
+                  - textbox "Description" [ref=e142]:
+                    - /placeholder: What to expect, line-up, schedule, what's included, age limits…
+                    - text: TAB TWO changed the description.
+                - generic [ref=e143]:
+                  - generic [ref=e144]:
+                    - generic [ref=e145]: Category
+                    - combobox "Category" [ref=e148]:
+                      - option "Choose a category" [disabled]
+                      - option "Music"
+                      - option "— Concerts" [selected]
+                      - option "— Music Festivals"
+                      - option "— DJ Nights"
+                      - option "— Classical"
+                      - option "— Folk"
+                      - option "Comedy"
+                      - option "— Stand-up"
+                      - option "— Improv"
+                      - option "Theatre & Arts"
+                      - option "— Plays"
+                      - option "— Dance"
+                      - option "— Exhibitions"
+                      - option "Sports"
+                      - option "— Football"
+                      - option "— Cricket"
+                      - option "— Running"
+                      - option "— Esports"
+                      - option "Conferences"
+                      - option "— Tech"
+                      - option "— Business"
+                      - option "— Education"
+                      - option "Workshops"
+                      - option "— Photography"
+                      - option "— Cooking"
+                      - option "— Art & Craft"
+                      - option "Food & Drink"
+                      - option "Nightlife"
+                      - option "Festivals & Culture"
+                      - option "Kids & Family"
+                    - generic [ref=e149]: Required to publish.
+                  - generic [ref=e150]:
+                    - generic [ref=e151]: Visibility
+                    - combobox "Visibility" [ref=e154]:
+                      - option "Public" [selected]
+                      - option "Unlisted"
+                      - option "Private"
+                    - generic [ref=e155]: Listed in search and on your organizer page.
+                - generic [ref=e156]:
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: Tags
+                    - generic [ref=e159]: Optional
+                  - textbox "Tags" [ref=e161]:
+                    - /placeholder: jazz, live music, outdoor
+                    - text: jazz, live music
+                  - paragraph [ref=e163]: Separate with commas. Up to 10.
+          - button "Continue" [ref=e165]
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e265]:
+        - generic [ref=e269]: Saved
+  - button "Open Tanstack query devtools" [ref=e216] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e50] [cursor=pointer]
+  - alert [ref=e54]
+  - dialog "Leave without saving?" [ref=e273]:
+    - generic [ref=e274]:
+      - heading "Leave without saving?" [level=2] [ref=e275]
+      - button "Close" [ref=e276]
+    - generic [ref=e280]: You have unsaved changes on this step. They'll be lost if you switch now.
+    - generic [ref=e281]:
+      - button "Keep editing" [ref=e282]
+      - button "Discard changes" [active] [ref=e283]

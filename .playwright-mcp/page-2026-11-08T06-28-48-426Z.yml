@@ -1,0 +1,70 @@
+- generic [active] [ref=f8e1]:
+  - generic [ref=f8e16]:
+    - banner [ref=f8e17]:
+      - link [ref=f8e18] [cursor=pointer]:
+        - /url: /
+        - link "Book Event home" [ref=f8e19]:
+          - /url: /
+          - generic [ref=f8e26]: Book Event
+      - generic [ref=f8e27]: Door
+    - heading "Check in guests" [level=1] [ref=f8e28]
+    - paragraph [ref=f8e29]: Pick the event you're working at, then scan tickets at the entrance.
+    - generic [ref=f8e31]:
+      - heading "Coming up" [level=2] [ref=f8e32]
+      - list [ref=f8e33]:
+        - listitem [ref=f8e34]:
+          - link [ref=f8e35] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7f44-750d-bb0c-152e67dffdf4
+            - generic [ref=f8e36]:
+              - paragraph [ref=f8e37]: Jazz at the Courtyard
+              - paragraph [ref=f8e38]: Tue, Nov 10 · 7:00 PM – 10:00 PM · Your event
+        - listitem [ref=f8e41]:
+          - link [ref=f8e42] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7eec-7d42-8c00-deb69885aa94
+            - generic [ref=f8e43]:
+              - paragraph [ref=f8e44]: Neon Nights Festival
+              - paragraph [ref=f8e45]: Thu, Nov 12 · 4:00 PM – 11:00 PM · Your event
+        - listitem [ref=f8e48]:
+          - link [ref=f8e49] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7f93-7793-bb43-33d33a831982
+            - generic [ref=f8e50]:
+              - paragraph [ref=f8e51]: Deep House on the Roof
+              - paragraph [ref=f8e52]: Fri, Nov 13 · 5:00 PM – 11:00 PM · Your event
+        - listitem [ref=f8e55]:
+          - link [ref=f8e56] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7f09-7e16-abe1-f76fa0527452
+            - generic [ref=f8e57]:
+              - paragraph [ref=f8e58]: Stand-up at the Square
+              - paragraph [ref=f8e59]: Mon, Nov 16 · 6:30 PM – 8:30 PM · Your event
+        - listitem [ref=f8e62]:
+          - link [ref=f8e63] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7f6d-7370-9990-102e88834d17
+            - generic [ref=f8e64]:
+              - paragraph [ref=f8e65]: A Classical Evening
+              - paragraph [ref=f8e66]: Mon, Nov 23 · 5:30 PM – 8:30 PM · Your event
+        - listitem [ref=f8e69]:
+          - link [ref=f8e70] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7fb2-7bb1-8fed-653be2573fe5
+            - generic [ref=f8e71]:
+              - paragraph [ref=f8e72]: Valley Futsal Cup
+              - paragraph [ref=f8e73]: Fri, Dec 4 · 9:00 AM – 7:00 PM · Your event
+        - listitem [ref=f8e76]:
+          - link [ref=f8e77] [cursor=pointer]:
+            - /url: /check-in/01a1b9ce-779d-762c-b52e-859535c7a08d
+            - generic [ref=f8e78]:
+              - paragraph [ref=f8e79]: Phase 7 Publish Test
+              - paragraph [ref=f8e80]: Tue, Dec 22 · 6:00 PM – 8:00 PM · Your event
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f8e133] [cursor=pointer]
+  - generic [ref=f8e10] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f8e11]
+    - generic [ref=f8e182]:
+      - button "Open issues overlay" [ref=f8e183]:
+        - generic [ref=f8e184]:
+          - generic [aria-hidden] [ref=f8e185]: "1"
+          - generic [ref=f8e186]: "2"
+        - generic [ref=f8e187]:
+          - text: Issue
+          - generic [aria-hidden] [ref=f8e188]: s
+      - button "Collapse issues badge" [ref=f8e189]
+  - alert [ref=f8e15]

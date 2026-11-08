@@ -1,0 +1,26 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - complementary [ref=f3e3]:
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]:
+          - link "Book Event home" [ref=f3e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f3e13]: Book Event
+          - generic [ref=f3e14]: Organizer
+        - navigation "Organizer" [ref=f3e15]:
+          - link "Overview" [ref=f3e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f3e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f3e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f3e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - link "Back to Book Event" [ref=f3e35] [cursor=pointer]:
+          - /url: /
+    - main [ref=f3e40]:
+      - status "Loading" [ref=f3e43]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f3e95] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f3e149] [cursor=pointer]
+  - alert [ref=f3e153]

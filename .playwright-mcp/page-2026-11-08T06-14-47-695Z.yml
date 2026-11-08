@@ -1,0 +1,127 @@
+- generic [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "Book Event home" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e13]: Book Event
+          - generic [ref=f1e14]: Organizer
+        - navigation "Organizer" [ref=f1e15]:
+          - link "Overview" [ref=f1e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f1e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f1e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f1e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f1e34]:
+          - link "Back to Book Event" [ref=f1e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f1e232]:
+            - generic [aria-hidden] [ref=f1e233]: CT
+            - generic [ref=f1e234]:
+              - paragraph [ref=f1e235]: Claude Tester
+              - paragraph [ref=f1e236]: claude.ui.test1@gmail.com
+            - button "Sign out" [ref=f1e237]
+    - main [ref=f1e40]:
+      - generic [ref=f1e41]:
+        - link "All events" [ref=f1e356] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f1e359]:
+          - generic [ref=f1e360]:
+            - generic [ref=f1e361]: Draft
+            - heading "Phase 7 Test Jazz Night" [level=1] [ref=f1e364]
+            - paragraph [ref=f1e365]: Sun, Dec 20 · 6:00 PM – 10:00 PM
+          - button "More actions" [ref=f1e368]
+        - navigation [ref=f1e373]:
+          - link "Event" [ref=f1e374] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3
+          - link "Promo codes" [ref=f1e376] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/promo-codes
+          - link "Attendees" [ref=f1e377] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/attendees
+          - link "Door staff" [ref=f1e378] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/staff
+        - list [ref=f1e379]:
+          - listitem [ref=f1e380]:
+            - button "Basics" [ref=f1e381]
+          - listitem [ref=f1e386]:
+            - button "When & where" [ref=f1e387]
+          - listitem [ref=f1e392]:
+            - button "3 Cover image" [ref=f1e393]:
+              - generic [ref=f1e394]: "3"
+              - generic [ref=f1e395]: Cover image
+          - listitem [ref=f1e396]:
+            - button "4 Tickets" [ref=f1e397]:
+              - generic [ref=f1e398]: "4"
+              - generic [ref=f1e399]: Tickets
+          - listitem [ref=f1e400]:
+            - button "5 Review & publish" [ref=f1e401]:
+              - generic [ref=f1e402]: "5"
+              - generic [ref=f1e403]: Review & publish
+        - generic [ref=f1e437]:
+          - generic [ref=f1e438]:
+            - generic [ref=f1e440]:
+              - heading "Tickets" [level=2] [ref=f1e441]
+              - paragraph [ref=f1e442]: At least one ticket type on sale is needed to publish. Prices are in NPR; 0 makes it free.
+            - generic [ref=f1e444]:
+              - paragraph [ref=f1e448]: No ticket types yet
+              - paragraph [ref=f1e449]: Add General admission, VIP, Early bird… Each has its own price, quantity and sales window.
+              - button "Add a ticket type" [ref=f1e451]
+          - generic [ref=f1e452]:
+            - button "Back" [ref=f1e453]
+            - button "Continue" [ref=f1e454]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f1e95] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e149] [cursor=pointer]
+  - alert [ref=f1e153]: Phase 7 Test Jazz Night
+  - dialog "Add a ticket type" [ref=f1e457]:
+    - generic [ref=f1e458]:
+      - heading "Add a ticket type" [level=2] [ref=f1e459]
+      - button "Close" [active] [ref=f1e460]
+    - generic [ref=f1e465]:
+      - generic [ref=f1e466]:
+        - generic [ref=f1e467]: Name
+        - textbox "Name" [ref=f1e470]:
+          - /placeholder: General admission
+      - generic [ref=f1e471]:
+        - generic [ref=f1e472]:
+          - generic [ref=f1e473]: Description
+          - generic [ref=f1e474]: Optional
+        - textbox "Description" [ref=f1e475]:
+          - /placeholder: Front rows + welcome drink
+      - generic [ref=f1e476]:
+        - generic [ref=f1e477]:
+          - generic [ref=f1e478]: Price (NPR)
+          - textbox "Price (NPR)" [ref=f1e481]:
+            - /placeholder: "1500"
+          - paragraph [ref=f1e483]: 0 for free
+        - generic [ref=f1e484]:
+          - generic [ref=f1e485]: Quantity
+          - textbox "Quantity" [ref=f1e488]:
+            - /placeholder: "300"
+        - generic [ref=f1e489]:
+          - generic [ref=f1e490]: Min per order
+          - textbox "Min per order" [ref=f1e493]: "1"
+        - generic [ref=f1e494]:
+          - generic [ref=f1e495]: Max per order
+          - textbox "Max per order" [ref=f1e498]: "10"
+        - generic [ref=f1e499]:
+          - generic [ref=f1e500]:
+            - generic [ref=f1e501]: Sales start
+            - generic [ref=f1e502]: Optional
+          - textbox "Sales start" [ref=f1e504]
+        - generic [ref=f1e505]:
+          - generic [ref=f1e506]:
+            - generic [ref=f1e507]: Sales end
+            - generic [ref=f1e508]: Optional
+          - textbox "Sales end" [ref=f1e510]
+      - paragraph [ref=f1e511]: Times are in Asia/Kathmandu. Leave sales dates empty to sell from publishing until the event ends.
+      - generic [ref=f1e512]:
+        - checkbox "On sale (uncheck to hide it without deleting)" [checked] [ref=f1e513]
+        - text: On sale (uncheck to hide it without deleting)
+      - generic [ref=f1e514]:
+        - button "Cancel" [ref=f1e515]
+        - button "Add ticket type" [ref=f1e516]

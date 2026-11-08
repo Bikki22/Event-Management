@@ -1,0 +1,22 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e115]:
+    - banner [ref=f7e116]:
+      - link "Book Event home" [ref=f7e118] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f7e125]: Book Event
+      - generic [ref=f7e126]: Door
+    - heading "Check in guests" [level=1] [ref=f7e127]
+    - paragraph [ref=f7e128]: Pick the event you're working at, then scan tickets at the entrance.
+    - generic [ref=f7e130]:
+      - heading "Coming up" [level=2] [ref=f7e131]
+      - list [ref=f7e132]:
+        - listitem [ref=f7e133]:
+          - link [ref=f7e134] [cursor=pointer]:
+            - /url: /check-in/01a1b2b8-7f44-750d-bb0c-152e67dffdf4
+            - generic [ref=f7e135]:
+              - paragraph [ref=f7e136]: Jazz at the Courtyard
+              - paragraph [ref=f7e137]: Tue, Nov 10 · 7:00 PM – 10:00 PM · Manager
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f7e56] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f7e110] [cursor=pointer]
+  - alert [ref=f7e114]

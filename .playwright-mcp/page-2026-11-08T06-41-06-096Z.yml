@@ -1,0 +1,417 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - generic [ref=f5e5]:
+          - link "Book Event home" [ref=f5e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f5e13]: Book Event
+          - generic [ref=f5e14]: Admin
+        - navigation "Admin" [ref=f5e15]:
+          - link "Overview" [ref=f5e16] [cursor=pointer]:
+            - /url: /admin
+          - link "Organizers" [ref=f5e22] [cursor=pointer]:
+            - /url: /admin/organizers
+          - link "Users" [ref=f5e26] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Categories" [ref=f5e32] [cursor=pointer]:
+            - /url: /admin/categories
+          - link "Payments" [ref=f5e37] [cursor=pointer]:
+            - /url: /admin/payments
+          - link "Refunds" [ref=f5e40] [cursor=pointer]:
+            - /url: /admin/refunds
+          - link "Audit log" [ref=f5e44] [cursor=pointer]:
+            - /url: /admin/audit-log
+        - generic [ref=f5e48]:
+          - link "Back to Book Event" [ref=f5e49] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f5e68]:
+            - generic [aria-hidden] [ref=f5e69]: SA
+            - generic [ref=f5e70]:
+              - paragraph [ref=f5e71]: Site Admin
+              - paragraph [ref=f5e72]: admin@gmail.com
+            - button "Sign out" [ref=f5e73]
+    - main [ref=f5e54]:
+      - generic [ref=f5e55]:
+        - generic [ref=f5e78]:
+          - paragraph [ref=f5e79]: Admin
+          - heading "Audit log" [level=1] [ref=f5e80]
+          - paragraph [ref=f5e81]: "Every write on the platform: who did what, when, from where, and what changed. Append-only."
+        - generic [ref=f5e82]:
+          - button "Everything" [pressed] [ref=f5e83]
+          - button "Admin actions" [ref=f5e84]
+          - button "Organizers" [ref=f5e85]
+          - button "Events" [ref=f5e86]
+          - button "Ticket types" [ref=f5e87]
+          - button "Promo codes" [ref=f5e88]
+          - button "Bookings" [ref=f5e89]
+          - button "Sign-in & passwords" [ref=f5e90]
+          - button "Venues" [ref=f5e91]
+        - generic [ref=f5e92]:
+          - searchbox "Filter by action" [ref=f5e94]
+          - searchbox "Filter by entity id" [ref=f5e96]
+          - generic [ref=f5e97]:
+            - text: From
+            - textbox "From" [ref=f5e98]
+          - generic [ref=f5e99]:
+            - text: To
+            - textbox "To" [ref=f5e100]
+        - list [ref=f5e101]:
+          - listitem [ref=f5e102]:
+            - group [ref=f5e103]:
+              - generic "admin.refund_completed Site Admin refund …c76a8bef Nov 8, 2026, 12:25:52 PM · Localhost" [ref=f5e104] [cursor=pointer]:
+                - generic [ref=f5e107]:
+                  - generic [ref=f5e108]: admin.refund_completed
+                  - generic [ref=f5e109]: Site Admin
+                  - generic [ref=f5e110]: refund …c76a8bef
+                  - generic [ref=f5e111]: Nov 8, 2026, 12:25:52 PM · Localhost
+          - listitem [ref=f5e112]:
+            - group [ref=f5e113]:
+              - generic "admin.category_deleted Site Admin category …696231a9 Nov 8, 2026, 12:25:16 PM · Localhost" [ref=f5e114] [cursor=pointer]:
+                - generic [ref=f5e117]:
+                  - generic [ref=f5e118]: admin.category_deleted
+                  - generic [ref=f5e119]: Site Admin
+                  - generic [ref=f5e120]: category …696231a9
+                  - generic [ref=f5e121]: Nov 8, 2026, 12:25:16 PM · Localhost
+          - listitem [ref=f5e122]:
+            - group [ref=f5e123]:
+              - generic "admin.category_deleted Site Admin category …dbb0d65a Nov 8, 2026, 12:25:15 PM · Localhost" [ref=f5e124] [cursor=pointer]:
+                - generic [ref=f5e127]:
+                  - generic [ref=f5e128]: admin.category_deleted
+                  - generic [ref=f5e129]: Site Admin
+                  - generic [ref=f5e130]: category …dbb0d65a
+                  - generic [ref=f5e131]: Nov 8, 2026, 12:25:15 PM · Localhost
+          - listitem [ref=f5e132]:
+            - group [ref=f5e133]:
+              - generic "admin.category_updated Site Admin category …dbb0d65a Nov 8, 2026, 12:25:13 PM · Localhost" [ref=f5e134] [cursor=pointer]:
+                - generic [ref=f5e137]:
+                  - generic [ref=f5e138]: admin.category_updated
+                  - generic [ref=f5e139]: Site Admin
+                  - generic [ref=f5e140]: category …dbb0d65a
+                  - generic [ref=f5e141]: Nov 8, 2026, 12:25:13 PM · Localhost
+          - listitem [ref=f5e142]:
+            - group [ref=f5e143]:
+              - generic "admin.category_created Site Admin category …dbb0d65a Nov 8, 2026, 12:25:01 PM · Localhost" [ref=f5e144] [cursor=pointer]:
+                - generic [ref=f5e147]:
+                  - generic [ref=f5e148]: admin.category_created
+                  - generic [ref=f5e149]: Site Admin
+                  - generic [ref=f5e150]: category …dbb0d65a
+                  - generic [ref=f5e151]: Nov 8, 2026, 12:25:01 PM · Localhost
+          - listitem [ref=f5e152]:
+            - group [ref=f5e153]:
+              - generic "admin.category_created Site Admin category …696231a9 Nov 8, 2026, 12:24:51 PM · Localhost" [ref=f5e154] [cursor=pointer]:
+                - generic [ref=f5e157]:
+                  - generic [ref=f5e158]: admin.category_created
+                  - generic [ref=f5e159]: Site Admin
+                  - generic [ref=f5e160]: category …696231a9
+                  - generic [ref=f5e161]: Nov 8, 2026, 12:24:51 PM · Localhost
+          - listitem [ref=f5e162]:
+            - group [ref=f5e163]:
+              - generic "admin.user_updated Site Admin user …d97594c8 Nov 8, 2026, 12:24:40 PM · Localhost" [ref=f5e164] [cursor=pointer]:
+                - generic [ref=f5e167]:
+                  - generic [ref=f5e168]: admin.user_updated
+                  - generic [ref=f5e169]: Site Admin
+                  - generic [ref=f5e170]: user …d97594c8
+                  - generic [ref=f5e171]: Nov 8, 2026, 12:24:40 PM · Localhost
+          - listitem [ref=f5e172]:
+            - group [ref=f5e173]:
+              - generic "admin.user_updated Site Admin user …d97594c8 Nov 8, 2026, 12:24:37 PM · Localhost" [ref=f5e174] [cursor=pointer]:
+                - generic [ref=f5e177]:
+                  - generic [ref=f5e178]: admin.user_updated
+                  - generic [ref=f5e179]: Site Admin
+                  - generic [ref=f5e180]: user …d97594c8
+                  - generic [ref=f5e181]: Nov 8, 2026, 12:24:37 PM · Localhost
+          - listitem [ref=f5e182]:
+            - group [ref=f5e183]:
+              - generic "admin.organizer_verified Site Admin organizer_profile …d97594c8 Nov 8, 2026, 12:24:12 PM · Localhost" [ref=f5e184] [cursor=pointer]:
+                - generic [ref=f5e187]:
+                  - generic [ref=f5e188]: admin.organizer_verified
+                  - generic [ref=f5e189]: Site Admin
+                  - generic [ref=f5e190]: organizer_profile …d97594c8
+                  - generic [ref=f5e191]: Nov 8, 2026, 12:24:12 PM · Localhost
+          - listitem [ref=f5e192]:
+            - group [ref=f5e193]:
+              - generic "event.staff_added Kathmandu Live event …67dffdf4 Nov 8, 2026, 12:05:17 PM · Localhost" [ref=f5e194] [cursor=pointer]:
+                - generic [ref=f5e197]:
+                  - generic [ref=f5e198]: event.staff_added
+                  - generic [ref=f5e199]: Kathmandu Live
+                  - generic [ref=f5e200]: event …67dffdf4
+                  - generic [ref=f5e201]: Nov 8, 2026, 12:05:17 PM · Localhost
+          - listitem [ref=f5e202]:
+            - group [ref=f5e203]:
+              - generic "event.attendees_exported Kathmandu Live event …67dffdf4 Nov 8, 2026, 12:05:02 PM · Localhost" [ref=f5e204] [cursor=pointer]:
+                - generic [ref=f5e207]:
+                  - generic [ref=f5e208]: event.attendees_exported
+                  - generic [ref=f5e209]: Kathmandu Live
+                  - generic [ref=f5e210]: event …67dffdf4
+                  - generic [ref=f5e211]: Nov 8, 2026, 12:05:02 PM · Localhost
+          - listitem [ref=f5e212]:
+            - group [ref=f5e213]:
+              - generic "event.attendees_exported Kathmandu Live event …67dffdf4 Nov 8, 2026, 12:03:45 PM · Localhost" [ref=f5e214] [cursor=pointer]:
+                - generic [ref=f5e217]:
+                  - generic [ref=f5e218]: event.attendees_exported
+                  - generic [ref=f5e219]: Kathmandu Live
+                  - generic [ref=f5e220]: event …67dffdf4
+                  - generic [ref=f5e221]: Nov 8, 2026, 12:03:45 PM · Localhost
+          - listitem [ref=f5e222]:
+            - group [ref=f5e223]:
+              - generic "promo_code.created Kathmandu Live promo_code …7811f594 Nov 8, 2026, 12:03:36 PM · Localhost" [ref=f5e224] [cursor=pointer]:
+                - generic [ref=f5e227]:
+                  - generic [ref=f5e228]: promo_code.created
+                  - generic [ref=f5e229]: Kathmandu Live
+                  - generic [ref=f5e230]: promo_code …7811f594
+                  - generic [ref=f5e231]: Nov 8, 2026, 12:03:36 PM · Localhost
+          - listitem [ref=f5e232]:
+            - generic [ref=f5e233]:
+              - generic [ref=f5e234]: event.published
+              - generic [ref=f5e235]: Kathmandu Live
+              - generic [ref=f5e236]: event …35c7a08d
+              - generic [ref=f5e237]: Nov 8, 2026, 12:03:08 PM · Localhost
+          - listitem [ref=f5e238]:
+            - group [ref=f5e239]:
+              - generic "ticket_type.created Kathmandu Live ticket_type …82c9764a Nov 8, 2026, 12:02:58 PM · Localhost" [ref=f5e240] [cursor=pointer]:
+                - generic [ref=f5e243]:
+                  - generic [ref=f5e244]: ticket_type.created
+                  - generic [ref=f5e245]: Kathmandu Live
+                  - generic [ref=f5e246]: ticket_type …82c9764a
+                  - generic [ref=f5e247]: Nov 8, 2026, 12:02:58 PM · Localhost
+          - listitem [ref=f5e248]:
+            - group [ref=f5e249]:
+              - generic "event.created Kathmandu Live event …35c7a08d Nov 8, 2026, 12:02:58 PM · Localhost" [ref=f5e250] [cursor=pointer]:
+                - generic [ref=f5e253]:
+                  - generic [ref=f5e254]: event.created
+                  - generic [ref=f5e255]: Kathmandu Live
+                  - generic [ref=f5e256]: event …35c7a08d
+                  - generic [ref=f5e257]: Nov 8, 2026, 12:02:58 PM · Localhost
+          - listitem [ref=f5e258]:
+            - group [ref=f5e259]:
+              - generic "event.updated Claude Tester event …d94573f3 Nov 8, 2026, 12:02:44 PM · Localhost" [ref=f5e260] [cursor=pointer]:
+                - generic [ref=f5e263]:
+                  - generic [ref=f5e264]: event.updated
+                  - generic [ref=f5e265]: Claude Tester
+                  - generic [ref=f5e266]: event …d94573f3
+                  - generic [ref=f5e267]: Nov 8, 2026, 12:02:44 PM · Localhost
+          - listitem [ref=f5e268]:
+            - group [ref=f5e269]:
+              - generic "event.updated Claude Tester event …d94573f3 Nov 8, 2026, 12:02:37 PM · Localhost" [ref=f5e270] [cursor=pointer]:
+                - generic [ref=f5e273]:
+                  - generic [ref=f5e274]: event.updated
+                  - generic [ref=f5e275]: Claude Tester
+                  - generic [ref=f5e276]: event …d94573f3
+                  - generic [ref=f5e277]: Nov 8, 2026, 12:02:37 PM · Localhost
+          - listitem [ref=f5e278]:
+            - group [ref=f5e279]:
+              - generic "event.updated Claude Tester event …d94573f3 Nov 8, 2026, 12:02:17 PM · Localhost" [ref=f5e280] [cursor=pointer]:
+                - generic [ref=f5e283]:
+                  - generic [ref=f5e284]: event.updated
+                  - generic [ref=f5e285]: Claude Tester
+                  - generic [ref=f5e286]: event …d94573f3
+                  - generic [ref=f5e287]: Nov 8, 2026, 12:02:17 PM · Localhost
+          - listitem [ref=f5e288]:
+            - group [ref=f5e289]:
+              - generic "event.updated Claude Tester event …d94573f3 Nov 8, 2026, 12:01:13 PM · Localhost" [ref=f5e290] [cursor=pointer]:
+                - generic [ref=f5e293]:
+                  - generic [ref=f5e294]: event.updated
+                  - generic [ref=f5e295]: Claude Tester
+                  - generic [ref=f5e296]: event …d94573f3
+                  - generic [ref=f5e297]: Nov 8, 2026, 12:01:13 PM · Localhost
+          - listitem [ref=f5e298]:
+            - group [ref=f5e299]:
+              - generic "event.updated Claude Tester event …d94573f3 Nov 8, 2026, 12:00:10 PM · Localhost" [ref=f5e300] [cursor=pointer]:
+                - generic [ref=f5e303]:
+                  - generic [ref=f5e304]: event.updated
+                  - generic [ref=f5e305]: Claude Tester
+                  - generic [ref=f5e306]: event …d94573f3
+                  - generic [ref=f5e307]: Nov 8, 2026, 12:00:10 PM · Localhost
+          - listitem [ref=f5e308]:
+            - group [ref=f5e309]:
+              - generic "ticket_type.created Claude Tester ticket_type …325237ff Nov 8, 2026, 11:59:47 AM · Localhost" [ref=f5e310] [cursor=pointer]:
+                - generic [ref=f5e313]:
+                  - generic [ref=f5e314]: ticket_type.created
+                  - generic [ref=f5e315]: Claude Tester
+                  - generic [ref=f5e316]: ticket_type …325237ff
+                  - generic [ref=f5e317]: Nov 8, 2026, 11:59:47 AM · Localhost
+          - listitem [ref=f5e318]:
+            - group [ref=f5e319]:
+              - generic "event.created Claude Tester event …d94573f3 Nov 8, 2026, 11:59:37 AM · Localhost" [ref=f5e320] [cursor=pointer]:
+                - generic [ref=f5e323]:
+                  - generic [ref=f5e324]: event.created
+                  - generic [ref=f5e325]: Claude Tester
+                  - generic [ref=f5e326]: event …d94573f3
+                  - generic [ref=f5e327]: Nov 8, 2026, 11:59:37 AM · Localhost
+          - listitem [ref=f5e328]:
+            - group [ref=f5e329]:
+              - generic "organizer.payout_updated Bikki Admin organizer_profile …2776650f Nov 7, 2026, 4:28:47 AM · Localhost" [ref=f5e330] [cursor=pointer]:
+                - generic [ref=f5e333]:
+                  - generic [ref=f5e334]: organizer.payout_updated
+                  - generic [ref=f5e335]: Bikki Admin
+                  - generic [ref=f5e336]: organizer_profile …2776650f
+                  - generic [ref=f5e337]: Nov 7, 2026, 4:28:47 AM · Localhost
+          - listitem [ref=f5e338]:
+            - group [ref=f5e339]:
+              - generic "organizer.profile_created Bikki Admin organizer_profile …2776650f Nov 7, 2026, 4:28:09 AM · Localhost" [ref=f5e340] [cursor=pointer]:
+                - generic [ref=f5e343]:
+                  - generic [ref=f5e344]: organizer.profile_created
+                  - generic [ref=f5e345]: Bikki Admin
+                  - generic [ref=f5e346]: organizer_profile …2776650f
+                  - generic [ref=f5e347]: Nov 7, 2026, 4:28:09 AM · Localhost
+          - listitem [ref=f5e348]:
+            - group [ref=f5e349]:
+              - generic "organizer.payout_updated Claude Tester organizer_profile …d97594c8 Nov 7, 2026, 4:24:50 AM · Localhost" [ref=f5e350] [cursor=pointer]:
+                - generic [ref=f5e353]:
+                  - generic [ref=f5e354]: organizer.payout_updated
+                  - generic [ref=f5e355]: Claude Tester
+                  - generic [ref=f5e356]: organizer_profile …d97594c8
+                  - generic [ref=f5e357]: Nov 7, 2026, 4:24:50 AM · Localhost
+          - listitem [ref=f5e358]:
+            - group [ref=f5e359]:
+              - generic "organizer.profile_created Claude Tester organizer_profile …d97594c8 Nov 7, 2026, 4:24:03 AM · Localhost" [ref=f5e360] [cursor=pointer]:
+                - generic [ref=f5e363]:
+                  - generic [ref=f5e364]: organizer.profile_created
+                  - generic [ref=f5e365]: Claude Tester
+                  - generic [ref=f5e366]: organizer_profile …d97594c8
+                  - generic [ref=f5e367]: Nov 7, 2026, 4:24:03 AM · Localhost
+          - listitem [ref=f5e368]:
+            - group [ref=f5e369]:
+              - generic "booking.refund_requested Bikki Admin booking …65901944 Nov 7, 2026, 4:13:12 AM · Localhost" [ref=f5e370] [cursor=pointer]:
+                - generic [ref=f5e373]:
+                  - generic [ref=f5e374]: booking.refund_requested
+                  - generic [ref=f5e375]: Bikki Admin
+                  - generic [ref=f5e376]: booking …65901944
+                  - generic [ref=f5e377]: Nov 7, 2026, 4:13:12 AM · Localhost
+          - listitem [ref=f5e378]:
+            - group [ref=f5e379]:
+              - generic "booking.refund_requested Claude Tester booking …92562ed8 Nov 7, 2026, 4:08:21 AM · Localhost" [ref=f5e380] [cursor=pointer]:
+                - generic [ref=f5e383]:
+                  - generic [ref=f5e384]: booking.refund_requested
+                  - generic [ref=f5e385]: Claude Tester
+                  - generic [ref=f5e386]: booking …92562ed8
+                  - generic [ref=f5e387]: Nov 7, 2026, 4:08:21 AM · Localhost
+          - listitem [ref=f5e388]:
+            - group [ref=f5e389]:
+              - generic "admin.user_promoted_cli System user …2776650f Nov 7, 2026, 3:34:55 AM" [ref=f5e390] [cursor=pointer]:
+                - generic [ref=f5e393]:
+                  - generic [ref=f5e394]: admin.user_promoted_cli
+                  - generic [ref=f5e395]: System
+                  - generic [ref=f5e396]: user …2776650f
+                  - generic [ref=f5e397]: Nov 7, 2026, 3:34:55 AM
+          - listitem [ref=f5e398]:
+            - group [ref=f5e399]:
+              - generic "admin.user_promoted_cli System user …a4f4ecb7 Nov 7, 2026, 2:27:31 AM" [ref=f5e400] [cursor=pointer]:
+                - generic [ref=f5e403]:
+                  - generic [ref=f5e404]: admin.user_promoted_cli
+                  - generic [ref=f5e405]: System
+                  - generic [ref=f5e406]: user …a4f4ecb7
+                  - generic [ref=f5e407]: Nov 7, 2026, 2:27:31 AM
+          - listitem [ref=f5e408]:
+            - group [ref=f5e409]:
+              - generic "event.attendees_exported Smoke smoke2-org-1793966166863 event …0852e653 Nov 6, 2026, 5:41:08 PM · Localhost" [ref=f5e410] [cursor=pointer]:
+                - generic [ref=f5e413]:
+                  - generic [ref=f5e414]: event.attendees_exported
+                  - generic [ref=f5e415]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e416]: event …0852e653
+                  - generic [ref=f5e417]: Nov 6, 2026, 5:41:08 PM · Localhost
+          - listitem [ref=f5e418]:
+            - group [ref=f5e419]:
+              - generic "event.cancelled Smoke smoke2-org-1793966166863 event …0852e653 Nov 6, 2026, 5:41:08 PM · Localhost" [ref=f5e420] [cursor=pointer]:
+                - generic [ref=f5e423]:
+                  - generic [ref=f5e424]: event.cancelled
+                  - generic [ref=f5e425]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e426]: event …0852e653
+                  - generic [ref=f5e427]: Nov 6, 2026, 5:41:08 PM · Localhost
+          - listitem [ref=f5e428]:
+            - group [ref=f5e429]:
+              - generic "booking.refund_requested Smoke smoke2-buyer-1793966166863 booking …6e6166e4 Nov 6, 2026, 5:41:07 PM · Localhost" [ref=f5e430] [cursor=pointer]:
+                - generic [ref=f5e433]:
+                  - generic [ref=f5e434]: booking.refund_requested
+                  - generic [ref=f5e435]: Smoke smoke2-buyer-1793966166863
+                  - generic [ref=f5e436]: booking …6e6166e4
+                  - generic [ref=f5e437]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e438]:
+            - generic [ref=f5e439]:
+              - generic [ref=f5e440]: event.published
+              - generic [ref=f5e441]: Smoke smoke2-org-1793966166863
+              - generic [ref=f5e442]: event …0852e653
+              - generic [ref=f5e443]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e444]:
+            - group [ref=f5e445]:
+              - generic "promo_code.created Smoke smoke2-org-1793966166863 promo_code …4cc7275a Nov 6, 2026, 5:41:07 PM · Localhost" [ref=f5e446] [cursor=pointer]:
+                - generic [ref=f5e449]:
+                  - generic [ref=f5e450]: promo_code.created
+                  - generic [ref=f5e451]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e452]: promo_code …4cc7275a
+                  - generic [ref=f5e453]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e454]:
+            - group [ref=f5e455]:
+              - generic "ticket_type.created Smoke smoke2-org-1793966166863 ticket_type …f63e3969 Nov 6, 2026, 5:41:07 PM · Localhost" [ref=f5e456] [cursor=pointer]:
+                - generic [ref=f5e459]:
+                  - generic [ref=f5e460]: ticket_type.created
+                  - generic [ref=f5e461]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e462]: ticket_type …f63e3969
+                  - generic [ref=f5e463]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e464]:
+            - group [ref=f5e465]:
+              - generic "event.created Smoke smoke2-org-1793966166863 event …0852e653 Nov 6, 2026, 5:41:07 PM · Localhost" [ref=f5e466] [cursor=pointer]:
+                - generic [ref=f5e469]:
+                  - generic [ref=f5e470]: event.created
+                  - generic [ref=f5e471]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e472]: event …0852e653
+                  - generic [ref=f5e473]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e474]:
+            - group [ref=f5e475]:
+              - generic "organizer.profile_created Smoke smoke2-org-1793966166863 organizer_profile …ca3d977c Nov 6, 2026, 5:41:07 PM · Localhost" [ref=f5e476] [cursor=pointer]:
+                - generic [ref=f5e479]:
+                  - generic [ref=f5e480]: organizer.profile_created
+                  - generic [ref=f5e481]: Smoke smoke2-org-1793966166863
+                  - generic [ref=f5e482]: organizer_profile …ca3d977c
+                  - generic [ref=f5e483]: Nov 6, 2026, 5:41:07 PM · Localhost
+          - listitem [ref=f5e484]:
+            - generic [ref=f5e485]:
+              - generic [ref=f5e486]: event.published
+              - generic [ref=f5e487]: Smoke smoke-org-1793964090797
+              - generic [ref=f5e488]: event …998e4764
+              - generic [ref=f5e489]: Nov 6, 2026, 5:06:31 PM · Localhost
+          - listitem [ref=f5e490]:
+            - group [ref=f5e491]:
+              - generic "ticket_type.created Smoke smoke-org-1793964090797 ticket_type …1493d1b5 Nov 6, 2026, 5:06:31 PM · Localhost" [ref=f5e492] [cursor=pointer]:
+                - generic [ref=f5e495]:
+                  - generic [ref=f5e496]: ticket_type.created
+                  - generic [ref=f5e497]: Smoke smoke-org-1793964090797
+                  - generic [ref=f5e498]: ticket_type …1493d1b5
+                  - generic [ref=f5e499]: Nov 6, 2026, 5:06:31 PM · Localhost
+          - listitem [ref=f5e500]:
+            - group [ref=f5e501]:
+              - generic "event.created Smoke smoke-org-1793964090797 event …998e4764 Nov 6, 2026, 5:06:31 PM · Localhost" [ref=f5e502] [cursor=pointer]:
+                - generic [ref=f5e505]:
+                  - generic [ref=f5e506]: event.created
+                  - generic [ref=f5e507]: Smoke smoke-org-1793964090797
+                  - generic [ref=f5e508]: event …998e4764
+                  - generic [ref=f5e509]: Nov 6, 2026, 5:06:31 PM · Localhost
+          - listitem [ref=f5e510]:
+            - group [ref=f5e511]:
+              - generic "organizer.profile_created Smoke smoke-org-1793964090797 organizer_profile …27451027 Nov 6, 2026, 5:06:31 PM · Localhost" [ref=f5e512] [cursor=pointer]:
+                - generic [ref=f5e515]:
+                  - generic [ref=f5e516]: organizer.profile_created
+                  - generic [ref=f5e517]: Smoke smoke-org-1793964090797
+                  - generic [ref=f5e518]: organizer_profile …27451027
+                  - generic [ref=f5e519]: Nov 6, 2026, 5:06:31 PM · Localhost
+          - listitem [ref=f5e520]:
+            - group [ref=f5e521]:
+              - generic "auth.password_reset Alice <b>Test</b> user …6dd1e234 Nov 6, 2026, 12:19:28 PM · Localhost" [ref=f5e522] [cursor=pointer]:
+                - generic [ref=f5e525]:
+                  - generic [ref=f5e526]: auth.password_reset
+                  - generic [ref=f5e527]: Alice <b>Test</b>
+                  - generic [ref=f5e528]: user …6dd1e234
+                  - generic [ref=f5e529]: Nov 6, 2026, 12:19:28 PM · Localhost
+          - listitem [ref=f5e530]:
+            - group [ref=f5e531]:
+              - generic "auth.password_changed Alice <b>Test</b> user …6dd1e234 Nov 6, 2026, 12:19:24 PM · Localhost" [ref=f5e532] [cursor=pointer]:
+                - generic [ref=f5e535]:
+                  - generic [ref=f5e536]: auth.password_changed
+                  - generic [ref=f5e537]: Alice <b>Test</b>
+                  - generic [ref=f5e538]: user …6dd1e234
+                  - generic [ref=f5e539]: Nov 6, 2026, 12:19:24 PM · Localhost
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f5e590] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f5e64] [cursor=pointer]
+  - alert [ref=f5e639]

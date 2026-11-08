@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e218]:
+    - complementary [ref=e219]:
+      - generic [ref=e220]:
+        - generic [ref=e221]:
+          - link "Book Event home" [ref=e222] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e229]: Book Event
+          - generic [ref=e230]: Admin
+        - navigation "Admin" [ref=e231]:
+          - link "Overview" [ref=e232] [cursor=pointer]:
+            - /url: /admin
+          - link "Organizers" [ref=e238] [cursor=pointer]:
+            - /url: /admin/organizers
+          - link "Users" [ref=e242] [cursor=pointer]:
+            - /url: /admin/users
+          - link "Categories" [ref=e248] [cursor=pointer]:
+            - /url: /admin/categories
+          - link "Payments" [ref=e253] [cursor=pointer]:
+            - /url: /admin/payments
+          - link "Refunds" [ref=e256] [cursor=pointer]:
+            - /url: /admin/refunds
+          - link "Audit log" [ref=e260] [cursor=pointer]:
+            - /url: /admin/audit-log
+        - generic [ref=e264]:
+          - link "Back to Book Event" [ref=e265] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e269]:
+            - generic [aria-hidden] [ref=e270]: SA
+            - generic [ref=e271]:
+              - paragraph [ref=e272]: Site Admin
+              - paragraph [ref=e273]: admin@gmail.com
+            - button "Sign out" [ref=e274]
+    - main [ref=e279]:
+      - generic [ref=e280]:
+        - generic [ref=e282]:
+          - paragraph [ref=e283]: Admin
+          - heading "Overview" [level=1] [ref=e284]
+          - paragraph [ref=e285]: How the platform is doing, and what needs someone's attention.
+        - generic [ref=e286]:
+          - region "Key numbers" [ref=e287]:
+            - generic [ref=e288]:
+              - paragraph [ref=e289]: Revenue
+              - paragraph [ref=e290]: NPR 4,200
+              - paragraph [ref=e291]: Confirmed bookings, refunds excluded
+            - generic [ref=e292]:
+              - paragraph [ref=e293]: Confirmed bookings
+              - paragraph [ref=e294]: "5"
+              - paragraph [ref=e295]: 0 in the last 24 hours
+            - generic [ref=e296]:
+              - paragraph [ref=e297]: Live events
+              - paragraph [ref=e298]: "18"
+              - paragraph [ref=e299]: Published and not over yet
+            - generic [ref=e300]:
+              - paragraph [ref=e301]: Users
+              - paragraph [ref=e302]: "14"
+              - paragraph [ref=e303]: 14 new in the last 7 days
+          - generic [ref=e304]:
+            - heading "Needs attention" [level=2] [ref=e305]
+            - list [ref=e306]:
+              - listitem [ref=e307]:
+                - link [ref=e308] [cursor=pointer]:
+                  - /url: /admin/organizers
+                  - paragraph [ref=e312]: 2 organizer profiles waiting for review
+              - listitem [ref=e315]:
+                - link "0 manual refunds to pay back by hand (eSewa) (nothing to do)" [ref=e316] [cursor=pointer]:
+                  - /url: /admin/refunds
+                  - paragraph [ref=e321]:
+                    - text: 0 manual refunds to pay back by hand (eSewa)
+                    - generic [ref=e322]: (nothing to do)
+              - listitem [ref=e325]:
+                - link "0 other refunds still open or failed (nothing to do)" [ref=e326] [cursor=pointer]:
+                  - /url: /admin/refunds?tab=failed
+                  - paragraph [ref=e331]:
+                    - text: 0 other refunds still open or failed
+                    - generic [ref=e332]: (nothing to do)
+              - listitem [ref=e335]:
+                - link "0 failed payments in the last 24 hours (nothing to do)" [ref=e336] [cursor=pointer]:
+                  - /url: /admin/payments?status=failed
+                  - paragraph [ref=e340]:
+                    - text: 0 failed payments in the last 24 hours
+                    - generic [ref=e341]: (nothing to do)
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=e344]:
+        - generic [ref=e348]: Welcome back, Site
+  - button "Open Tanstack query devtools" [ref=e168] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e114] [cursor=pointer]
+  - alert [ref=e217]: Overview

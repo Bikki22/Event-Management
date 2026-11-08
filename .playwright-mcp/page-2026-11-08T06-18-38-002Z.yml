@@ -1,0 +1,79 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "Book Event home" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e13]: Book Event
+          - generic [ref=f1e14]: Organizer
+        - navigation "Organizer" [ref=f1e15]:
+          - link "Overview" [ref=f1e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f1e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f1e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f1e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f1e34]:
+          - link "Back to Book Event" [ref=f1e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f1e55]:
+            - generic [aria-hidden] [ref=f1e56]: KL
+            - generic [ref=f1e57]:
+              - paragraph [ref=f1e58]: Kathmandu Live
+              - paragraph [ref=f1e59]: ktm-live@demo.bookevent.dev
+            - button "Sign out" [ref=f1e60]
+    - main [ref=f1e40]:
+      - generic [ref=f1e41]:
+        - link "All events" [ref=f1e64] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f1e67]:
+          - generic [ref=f1e68]:
+            - generic [ref=f1e69]: Published
+            - heading "Phase 7 Publish Test" [level=1] [ref=f1e72]
+            - paragraph [ref=f1e73]: Tue, Dec 22 · 6:00 PM – 8:00 PM
+          - generic [ref=f1e74]:
+            - link "View page" [ref=f1e75] [cursor=pointer]:
+              - /url: /events/phase-7-publish-test
+            - button "More actions" [ref=f1e81]
+        - navigation [ref=f1e86]:
+          - link "Event" [ref=f1e87] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d
+          - link "Promo codes" [ref=f1e88] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/promo-codes
+          - link "Attendees" [ref=f1e90] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/attendees
+          - link "Door staff" [ref=f1e91] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9ce-779d-762c-b52e-859535c7a08d/staff
+        - generic [ref=f1e92]:
+          - paragraph [ref=f1e93]: Buyers type a code at checkout for a discount. Codes are case-insensitive. Organizer-wide codes (made elsewhere) also work here and are marked.
+          - button "New code" [ref=f1e259]
+        - table [ref=f1e262]:
+          - rowgroup [ref=f1e263]:
+            - row [ref=f1e264]:
+              - columnheader "Code" [ref=f1e265]
+              - columnheader "Discount" [ref=f1e266]
+              - columnheader "Used" [ref=f1e267]
+              - columnheader "Valid" [ref=f1e268]
+              - columnheader "Status" [ref=f1e269]
+              - columnheader [ref=f1e270]
+          - rowgroup [ref=f1e271]:
+            - row [ref=f1e272]:
+              - cell "EARLY20" [ref=f1e273]
+              - cell "20% off" [ref=f1e274]
+              - cell "0 / 50" [ref=f1e275]:
+                - text: "0"
+                - generic [ref=f1e276]: / 50
+              - cell "Any time" [ref=f1e277]
+              - cell "Active" [ref=f1e278]
+              - cell [ref=f1e280]:
+                - button "Actions for EARLY20" [ref=f1e282]
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=f1e287]:
+        - generic [ref=f1e291]: EARLY20 created
+  - button "Open Tanstack query devtools" [ref=f1e154] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e50] [cursor=pointer]
+  - alert [ref=f1e54]

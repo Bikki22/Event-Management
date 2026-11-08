@@ -24,6 +24,8 @@ export function accountNav(role: Role): (NavItem & { group: "you" | "manage" })[
     { href: "/account/tickets", label: "My tickets", group: "you" },
     { href: "/account/bookings", label: "My bookings", group: "you" },
     { href: "/account", label: "Account settings", group: "you" },
+    // anyone can be door staff; the page lists only events they may scan for
+    { href: "/check-in", label: "Check in guests", group: "you" },
   ];
   if (role === "organizer" || role === "admin") items.push({ href: "/dashboard", label: "Organizer dashboard", group: "manage" });
   if (role === "admin") items.push({ href: "/admin", label: "Admin", group: "manage" });

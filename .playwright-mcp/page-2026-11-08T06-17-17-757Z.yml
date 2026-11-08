@@ -1,0 +1,145 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - complementary [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - generic [ref=f2e5]:
+          - link "Book Event home" [ref=f2e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f2e13]: Book Event
+          - generic [ref=f2e14]: Organizer
+        - navigation "Organizer" [ref=f2e15]:
+          - link "Overview" [ref=f2e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f2e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f2e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f2e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f2e34]:
+          - link "Back to Book Event" [ref=f2e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f2e55]:
+            - generic [aria-hidden] [ref=f2e56]: CT
+            - generic [ref=f2e57]:
+              - paragraph [ref=f2e58]: Claude Tester
+              - paragraph [ref=f2e59]: claude.ui.test1@gmail.com
+            - button "Sign out" [ref=f2e60]
+    - main [ref=f2e40]:
+      - generic [ref=f2e41]:
+        - link "All events" [ref=f2e64] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f2e67]:
+          - generic [ref=f2e68]:
+            - generic [ref=f2e69]: Draft
+            - heading "Phase 7 Test Jazz Night" [level=1] [ref=f2e72]
+            - paragraph [ref=f2e73]: Sun, Dec 20 · 6:00 PM – 10:00 PM
+          - button "More actions" [ref=f2e76]
+        - navigation [ref=f2e81]:
+          - link "Event" [ref=f2e82] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3
+          - link "Promo codes" [ref=f2e84] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/promo-codes
+          - link "Attendees" [ref=f2e85] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/attendees
+          - link "Door staff" [ref=f2e86] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/staff
+        - list [ref=f2e87]:
+          - listitem [ref=f2e88]:
+            - button "Basics" [ref=f2e89]
+          - listitem [ref=f2e94]:
+            - button "When & where" [ref=f2e95]
+          - listitem [ref=f2e100]:
+            - button "3 Cover image" [ref=f2e101]:
+              - generic [ref=f2e102]: "3"
+              - generic [ref=f2e103]: Cover image
+          - listitem [ref=f2e104]:
+            - button "Tickets" [ref=f2e105]
+          - listitem [ref=f2e110]:
+            - button "5 Review & publish" [ref=f2e111]:
+              - generic [ref=f2e112]: "5"
+              - generic [ref=f2e113]: Review & publish
+        - generic [ref=f2e115]:
+          - group [ref=f2e116]:
+            - generic [ref=f2e117]:
+              - heading "Basics" [level=2] [ref=f2e118]
+              - paragraph [ref=f2e119]: What the event is. You can change all of this later.
+              - generic [ref=f2e120]:
+                - generic [ref=f2e121]:
+                  - generic [ref=f2e122]: Event title
+                  - textbox "Event title" [ref=f2e125]:
+                    - /placeholder: Kathmandu Jazz Night
+                    - text: Phase 7 Test Jazz Night
+                - generic [ref=f2e126]:
+                  - generic [ref=f2e127]: Event address
+                  - textbox "Event address" [ref=f2e130]: phase-7-test-jazz-night
+                  - paragraph [ref=f2e132]: bookevent.com/events/…
+                - generic [ref=f2e133]:
+                  - generic [ref=f2e134]:
+                    - generic [ref=f2e135]: Summary
+                    - generic [ref=f2e136]: 41/300
+                  - textbox "Summary" [ref=f2e137]:
+                    - /placeholder: One or two sentences for event cards and link previews.
+                    - text: An evening of live jazz with local bands.
+                  - generic [ref=f2e138]: Required to publish.
+                - generic [ref=f2e139]:
+                  - generic [ref=f2e140]: Description
+                  - textbox "Description" [ref=f2e142]:
+                    - /placeholder: What to expect, line-up, schedule, what's included, age limits…
+                    - text: TAB TWO description v2.
+                - generic [ref=f2e143]:
+                  - generic [ref=f2e144]:
+                    - generic [ref=f2e145]: Category
+                    - combobox "Category" [ref=f2e148]:
+                      - option "Choose a category" [disabled]
+                      - option "Music" [selected]
+                      - option "— Concerts"
+                      - option "— Music Festivals"
+                      - option "— DJ Nights"
+                      - option "— Classical"
+                      - option "— Folk"
+                      - option "Comedy"
+                      - option "— Stand-up"
+                      - option "— Improv"
+                      - option "Theatre & Arts"
+                      - option "— Plays"
+                      - option "— Dance"
+                      - option "— Exhibitions"
+                      - option "Sports"
+                      - option "— Football"
+                      - option "— Cricket"
+                      - option "— Running"
+                      - option "— Esports"
+                      - option "Conferences"
+                      - option "— Tech"
+                      - option "— Business"
+                      - option "— Education"
+                      - option "Workshops"
+                      - option "— Photography"
+                      - option "— Cooking"
+                      - option "— Art & Craft"
+                      - option "Food & Drink"
+                      - option "Nightlife"
+                      - option "Festivals & Culture"
+                      - option "Kids & Family"
+                    - generic [ref=f2e149]: Required to publish.
+                  - generic [ref=f2e150]:
+                    - generic [ref=f2e151]: Visibility
+                    - combobox "Visibility" [ref=f2e154]:
+                      - option "Public" [selected]
+                      - option "Unlisted"
+                      - option "Private"
+                    - generic [ref=f2e155]: Listed in search and on your organizer page.
+                - generic [ref=f2e156]:
+                  - generic [ref=f2e157]:
+                    - generic [ref=f2e158]: Tags
+                    - generic [ref=f2e159]: Optional
+                  - textbox "Tags" [ref=f2e161]:
+                    - /placeholder: jazz, live music, outdoor
+                    - text: jazz, live music
+                  - paragraph [ref=f2e163]: Separate with commas. Up to 10.
+          - button "Continue" [ref=f2e165]
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f2e216] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f2e50] [cursor=pointer]
+  - alert [ref=f2e54]

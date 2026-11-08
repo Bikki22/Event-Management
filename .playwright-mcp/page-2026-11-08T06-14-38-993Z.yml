@@ -1,0 +1,85 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - complementary [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - generic [ref=f1e5]:
+          - link "Book Event home" [ref=f1e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=f1e13]: Book Event
+          - generic [ref=f1e14]: Organizer
+        - navigation "Organizer" [ref=f1e15]:
+          - link "Overview" [ref=f1e16] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Events" [ref=f1e22] [cursor=pointer]:
+            - /url: /dashboard/events
+          - link "Organizer profile" [ref=f1e25] [cursor=pointer]:
+            - /url: /dashboard/profile
+          - link "Payouts" [ref=f1e30] [cursor=pointer]:
+            - /url: /dashboard/payouts
+        - generic [ref=f1e34]:
+          - link "Back to Book Event" [ref=f1e35] [cursor=pointer]:
+            - /url: /
+          - generic [ref=f1e232]:
+            - generic [aria-hidden] [ref=f1e233]: CT
+            - generic [ref=f1e234]:
+              - paragraph [ref=f1e235]: Claude Tester
+              - paragraph [ref=f1e236]: claude.ui.test1@gmail.com
+            - button "Sign out" [ref=f1e237]
+    - main [ref=f1e40]:
+      - generic [ref=f1e41]:
+        - link "All events" [ref=f1e356] [cursor=pointer]:
+          - /url: /dashboard/events
+        - generic [ref=f1e359]:
+          - generic [ref=f1e360]:
+            - generic [ref=f1e361]: Draft
+            - heading "Phase 7 Test Jazz Night" [level=1] [ref=f1e364]
+            - paragraph [ref=f1e365]: Sun, Dec 20 · 6:00 PM – 10:00 PM
+          - button "More actions" [ref=f1e368]
+        - navigation [ref=f1e373]:
+          - link "Event" [ref=f1e374] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3
+          - link "Promo codes" [ref=f1e376] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/promo-codes
+          - link "Attendees" [ref=f1e377] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/attendees
+          - link "Door staff" [ref=f1e378] [cursor=pointer]:
+            - /url: /dashboard/events/01a1b9cb-64e0-750c-abcd-3a56d94573f3/staff
+        - list [ref=f1e379]:
+          - listitem [ref=f1e380]:
+            - button "Basics" [ref=f1e381]
+          - listitem [ref=f1e386]:
+            - button "When & where" [ref=f1e387]
+          - listitem [ref=f1e392]:
+            - button "3 Cover image" [ref=f1e393]:
+              - generic [ref=f1e394]: "3"
+              - generic [ref=f1e395]: Cover image
+          - listitem [ref=f1e396]:
+            - button "4 Tickets" [ref=f1e397]:
+              - generic [ref=f1e398]: "4"
+              - generic [ref=f1e399]: Tickets
+          - listitem [ref=f1e400]:
+            - button "5 Review & publish" [ref=f1e401]:
+              - generic [ref=f1e402]: "5"
+              - generic [ref=f1e403]: Review & publish
+        - generic [ref=f1e405]:
+          - generic [ref=f1e406]:
+            - heading "Cover image" [level=2] [ref=f1e407]
+            - paragraph [ref=f1e408]: Shown on event cards, the event page and link previews. A wide 16:9 photo works best; we crop and resize it for you.
+            - generic [ref=f1e410]:
+              - text: Cover
+              - generic [ref=f1e411]:
+                - button "Drop an image here or click to choose" [ref=f1e413]
+                - generic [ref=f1e419]:
+                  - button "Cover" [ref=f1e420]
+                  - button "Choose image" [ref=f1e421]
+                  - paragraph [ref=f1e426]: JPEG, PNG or WebP, up to 5 MB, at least 640×360px. 1600×900 or larger looks sharpest.
+          - generic [ref=f1e427]:
+            - button "Back" [ref=f1e428]
+            - button "Skip for now" [ref=f1e429]
+  - region "Notifications alt+T":
+    - list:
+      - listitem [ref=f1e430]:
+        - generic [ref=f1e434]: Draft saved
+  - button "Open Tanstack query devtools" [ref=f1e95] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e149] [cursor=pointer]
+  - alert [ref=f1e153]: Phase 7 Test Jazz Night

@@ -40,6 +40,8 @@ export interface RequestOptions {
   auth?: boolean;
   headers?: Record<string, string>;
   signal?: AbortSignal;
+  /** fetch cache mode, e.g. "no-cache" to revalidate a response the API marked cacheable */
+  cache?: RequestCache;
 }
 
 async function send(path: string, opts: RequestOptions, token: string | null): Promise<Response> {
@@ -55,6 +57,7 @@ async function send(path: string, opts: RequestOptions, token: string | null): P
       // the refresh cookie (ems_rt) lives on the API origin
       credentials: "include",
       signal: opts.signal,
+      cache: opts.cache,
     });
   } catch (err) {
     if ((err as Error)?.name === "AbortError") throw err;
