@@ -21,7 +21,14 @@ const schema = z
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
-    TRUST_PROXY: z.string().default("loopback"),
+    // Express "trust proxy": "true" (trust all, e.g. behind Vercel's edge), a hop count like "1",
+    // or a comma-separated list of names/CIDRs like "loopback,10.0.0.0/8"
+    TRUST_PROXY: z
+      .string()
+      .default("loopback")
+      .transform((s): boolean | number | string =>
+        s === "true" ? true : s === "false" ? false : /^\d+$/.test(s) ? Number(s) : s,
+      ),
     CORS_ORIGINS: z
       .string()
       .default("http://localhost:3000")
