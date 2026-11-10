@@ -11,3 +11,5 @@ auth.md
 backend.md
 .md*
 organizers.md
+.vercel
+.env*
